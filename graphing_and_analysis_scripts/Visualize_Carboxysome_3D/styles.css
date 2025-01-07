@@ -1,0 +1,11 @@
+body {
+	margin: 0;
+}
+
+.dg {
+	font-size: 1em !important;
+}
+
+.dg.main {
+	margin-top: 1em !important;
+}
