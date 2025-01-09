@@ -1,3 +1,4 @@
+// main.js © 2025 is licensed under CC BY-NC-SA 4.0
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
