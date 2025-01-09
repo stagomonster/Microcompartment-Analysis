@@ -7,6 +7,8 @@ function narot = calc_narot(rubisco, chain_lead_vector)
 %
 % Outputs
 % narot - the rotation angle of the rubisco
+%
+% calc_narot.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % if the rubisco orientation vector and the chain_lead_vector point in
     % the same direction

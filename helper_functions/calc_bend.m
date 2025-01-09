@@ -9,6 +9,8 @@ function bend = calc_bend(rubisco1, rubisco2)
 % Outputs
 % bend - the angle between a rubisco's orientation and the orientation
 % of the next rubisco in the chain in degrees
+%
+% calc_bend.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Normalize both rubisco orientation vectors
     rubisco_vec_1 = rubisco1.vector / norm(rubisco1.vector);

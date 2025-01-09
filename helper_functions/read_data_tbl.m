@@ -7,5 +7,8 @@ function omdTable = read_data_tbl(filename)
 %
 % Outputs
 % omdTable - the name of the array to store the data in
+%
+% read_data_tbl.m © 2025 is licensed under CC BY-NC-SA 4.0
+
 omdTable = dread(filename);
 end

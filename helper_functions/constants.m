@@ -1,4 +1,7 @@
 % Important Constants to use throughout OHQ Scripts
+%
+% constants.m © 2025 is licensed under CC BY-NC-SA 4.0
+
 function CONSTANTS = constants(pixel_size, diameter)
     persistent RUBISCO_DIAMETER_M PIXEL_SIZE AVOGADRO_NUMBER
     

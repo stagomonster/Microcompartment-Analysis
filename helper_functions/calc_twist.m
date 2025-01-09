@@ -12,6 +12,8 @@ function twist = calc_twist(rubisco1, rubisco2, chain_lead_vec)
 % twist - the difference in the narot angles of rubisco1 and rubisco2, 
 %         taking into account the symmetry of a rubisco. It is between -45 
 %         and +45 degrees
+%
+% calc_twist.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % get the narot angle of each rubisco
     narot1Raw = calc_narot(rubisco1, chain_lead_vec);

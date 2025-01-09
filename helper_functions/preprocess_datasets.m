@@ -1,21 +1,23 @@
 function preprocess_datasets(varargin)
-    % USAGE: odd and even files: preprocess_datasets(odd_file, even_file, outfile, clean_value, is_bin2)
-    %        single file: preprocess_datasets(infile, outfile, clean_value, is_bin2) infile must be in bin2
-    % if input separated into even and odd files, provide odd first
-    % and even second. otherwise provide input file name as first
-    % parameter. Then provide the output file name as the next parameter. 
-    % The next parameter is the size of the clean to perform on the data. 
-    % Lastly you may provide a true or false value as the last parameter to
-    % indicate if input data is bin2. If not provided default is bin2=true.
-    % If bin2 flag is set as false, we assume data is in bin1 and will
-    % convert it to bin2.
+% USAGE: odd and even files: preprocess_datasets(odd_file, even_file, outfile, clean_value, is_bin2)
+%        single file: preprocess_datasets(infile, outfile, clean_value, is_bin2) infile must be in bin2
+% if input separated into even and odd files, provide odd first
+% and even second. otherwise provide input file name as first
+% parameter. Then provide the output file name as the next parameter. 
+% The next parameter is the size of the clean to perform on the data. 
+% Lastly you may provide a true or false value as the last parameter to
+% indicate if input data is bin2. If not provided default is bin2=true.
+% If bin2 flag is set as false, we assume data is in bin1 and will
+% convert it to bin2.
 
-    % Preprocess given data sets: if given separated in even and odd, we will
-    % concatenate into a single table. if there is a nonzero value in columns
-    % 4-6 (shift), those values need to be added to columns 24-26,
-    % respectively, and then 4-6 need to be zeroed out. We will also
-    % transform all values in the table to real values to ensure that no
-    % imaginary values exist in the data.
+% Preprocess given data sets: if given separated in even and odd, we will
+% concatenate into a single table. if there is a nonzero value in columns
+% 4-6 (shift), those values need to be added to columns 24-26,
+% respectively, and then 4-6 need to be zeroed out. We will also
+% transform all values in the table to real values to ensure that no
+% imaginary values exist in the data.
+%
+% preprocess_datasets.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % concatenate even and odd data if 2 input files are given
     if nargin < 2
