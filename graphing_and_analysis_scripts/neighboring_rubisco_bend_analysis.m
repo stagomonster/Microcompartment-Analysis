@@ -12,6 +12,8 @@ function [] = neighboring_rubisco_bend_analysis(carboxysome_data, bin_limit, bin
 % bin_width - the width to make bins in the histogram (in degrees)
 % min_chain_length - the minimum length a chain can be and still be
 %                    included in this analysis
+%
+% neighboring_rubisco_bend_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % create arrays to hold the data that will be plotted
     bends = [];

@@ -8,6 +8,8 @@ function tensor_analysis_graphs(carboxysomes, min_num_rubiscos)
 %               through at least local_global_alignment.m
 % min_num_rubiscos - the minimum number of rubisco a carboxysome can have 
 %                    that you still want to include in this plot
+%
+% tensor_analysis_graphs.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % Filter out carboxysomes with less than min_num_rubiscos rubiscos
     carbs_to_include = carboxysomes([carboxysomes.num_rubisco] >= min_num_rubiscos);

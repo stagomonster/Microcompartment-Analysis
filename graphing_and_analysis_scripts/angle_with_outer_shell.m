@@ -10,6 +10,8 @@ function [] = angle_with_outer_shell(carboxysome_data, bin_width)
 % carboxysome_data - an array of carboxysome objects containing data
 %                    through at least local_global_alignment.m
 % bin_width - the width to make the bins in the histogram (in degrees)
+%
+% angle_with_outer_shell.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     %% get rubisco average normals and orientations from data
     orientations = []; % holds the orientations of the rubiscos

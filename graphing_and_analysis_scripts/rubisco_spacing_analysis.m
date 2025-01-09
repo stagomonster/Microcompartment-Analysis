@@ -11,6 +11,8 @@ function [] = rubisco_spacing_analysis(carboxysome_data, min_chain_length)
 %                    least through chain_maker.m
 % min_chain_length - the minimum length a chain can be and still be
 %                    included in this analysis
+%
+% rubisco_spacing_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     %% important constants
     % load constants from external file

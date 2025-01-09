@@ -18,6 +18,8 @@ function [] = chain_lengths_analysis(carboxysome_data, min_chain_length, min_lin
 %                objects must be filled with data through at least
 %                chain_linkages.m to use this filter with any value other
 %                than zero.
+%
+% chain_lengths_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Initialize arrays to hold the data
     chain_lengths = [];

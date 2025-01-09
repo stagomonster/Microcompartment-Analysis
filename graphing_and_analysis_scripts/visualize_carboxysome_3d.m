@@ -11,6 +11,8 @@ function [] = visualize_carboxysome_3d(filename)
 % Inputs:
 % filename - the path to the file that should make the carboxysome
 %            visualization. Must be a .tbl file.
+%
+% visualize_carboxysome_3d.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     %% Make sure the desired file can be loaded by the visualizer
     file_data = dread(filename); % read in the file to a matlab array

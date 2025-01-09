@@ -18,6 +18,8 @@ function [] = neighboring_rubisco_alignment_analysis(carboxysome_data, max_dista
 %                   outer rubiscos if set to true
 % min_rubiscos_inner - the minimum number of inner rubiscos a carboxysome 
 %                      needs to have to be plotted in this analysis
+%
+% neighboring_rubisco_alignment_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     %% Get Angles Between Rubiscos Data
     % initialize arrays to hold data to plot

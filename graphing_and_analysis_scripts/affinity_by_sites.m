@@ -14,6 +14,8 @@ function affinity_by_sites(filename, carboxysome_data, label, min_chain_length)
 % min_chain_length - for the inner concentration plot, only carboxysomes
 %                    with at least one chain of length min_chain_length 
 %                    will be plotted
+%
+% affinity_by_sites.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % this script requires the chain length to be 1
     addpath('../main_pipeline/');

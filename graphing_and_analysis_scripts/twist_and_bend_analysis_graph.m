@@ -9,6 +9,8 @@ function [] = twist_and_bend_analysis_graph(carboxysome_data, min_chain_length)
 %                    pipeline until at least chain_maker.m
 % min_chain_length - the minimum length of a chain whose data you want
 %                    plotted
+%
+% twist_and_bend_analysis_graph.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % create arrays to hold the data that will be plotted
     bends = [];

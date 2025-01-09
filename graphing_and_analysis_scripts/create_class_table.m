@@ -1,8 +1,7 @@
 function create_class_table(carboxysomes, outfile)
-    % Input is the Carboxysome array obtained after running chain_maker
-    
-    % Assuming the loaded array is named 'carboxysomes'
-    % If it has a different name, replace 'carboxysomes' with the correct variable name
+% Input is the Carboxysome array obtained after running chain_maker
+%
+% create_class_table.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % Open a file for writing
     fid = fopen(outfile, 'w');

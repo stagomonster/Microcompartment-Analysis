@@ -8,6 +8,8 @@ function display_chain_tags(carb_chains, carb_index)
 % carb_chains - an array of carboxysome objects containing the desired
 %               carboxysome
 % carb_index - the index of the carboxysome you want the chains of
+%
+% display_chain_tags.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Access the specified Carboxysome in the data array
     carboxysome = carb_chains(carb_index);

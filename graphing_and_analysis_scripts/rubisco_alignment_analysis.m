@@ -14,6 +14,8 @@ function [] = rubisco_alignment_analysis(carboxysome_data, max_angle, max_distan
 %                local_global_alignment.m)
 % min_inner_conc - the minimum inner concentration of a carboxysome to
 %                  allow on the plot (micro molar)
+%
+% rubisco_alignment_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Initialize arrays to hold data to plot
     valid_rubiscos = [];

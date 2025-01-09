@@ -16,6 +16,8 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
 % max_distance - the maximum distance (in nanometers) between two chains 
 %                that can still be neighbors
 % bin_width - the width to make bins in the histogram (in degrees)
+%
+% chain_spacing_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     %% important constants
     % load constants from external file

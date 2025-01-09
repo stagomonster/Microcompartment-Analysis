@@ -9,6 +9,8 @@ function concentration_volume_graphs(carboxysome_data)
 % Inputs
 % carboxysome_data - an array of caroxysome objects filled with data at
 %                    least through convex_hull_and_volume.m
+%
+% concentration_volume_graphs.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % get the data to be plotted from the array of carboxysomes
     vol = ([carboxysome_data.volume]')*(10^18); % in cubic micrometers
