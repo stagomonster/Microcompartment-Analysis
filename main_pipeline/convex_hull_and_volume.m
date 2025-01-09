@@ -1,8 +1,10 @@
 function carboxysome_data = convex_hull_and_volume(filename)
-    % Calculate the volume of carboxysomes from a data set based on a convex
-    % hull calculation. filename is a .tbl file containing the necessary data,
-    % carboxysome_data is an array of Carboxysome objects containing calculated
-    % information.
+% Calculate the volume of carboxysomes from a data set based on a convex
+% hull calculation. filename is a .tbl file containing the necessary data,
+% carboxysome_data is an array of Carboxysome objects containing calculated
+% information.
+%
+% convex_hull_and_volume.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % add paths to required helper functions and classes
     addpath('../helper_functions/');

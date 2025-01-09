@@ -1,9 +1,12 @@
 function carboxysome_data = local_global_alignment(filename, carboxysomes, max_distance)
-    % Calculate the pairwise distance and angle between each pair of Rubiscos
-    % within a carboxysome. carboxysomes is an array of Carboxysome Objects
-    % which contain the necessary rubisco data. If neceassary, can read data
-    % directly from file filename by inputing filename as the only argument. 
-    % Also calculate the global alignment of each carboxysome using tensor analysis.
+% Calculate the pairwise distance and angle between each pair of Rubiscos
+% within a carboxysome. carboxysomes is an array of Carboxysome Objects
+% which contain the necessary rubisco data. If neceassary, can read data
+% directly from file filename by inputing filename as the only argument. 
+% Also calculate the global alignment of each carboxysome using tensor
+% analysis.
+%
+% local_global_alignment.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     %% import useful data
     % Allow the user to run this script as a starting point, will call

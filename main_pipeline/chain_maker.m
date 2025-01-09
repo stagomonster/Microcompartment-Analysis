@@ -23,6 +23,8 @@ function carboxysome_data = chain_maker(filename, carboxysome_data, min_chain_le
 %
 % Outputs
 % carboxysome_data - an array of Carboxysome objects with chains populated
+%
+% chain_maker.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     tag = 1; % the tag of the chain
     

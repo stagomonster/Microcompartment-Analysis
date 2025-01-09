@@ -19,6 +19,8 @@ function carboxysome_data = chain_linkages(filename, carboxysome_data, min_dista
 % Outputs
 % carboxysome_data - an array of Carboxysome objects with the chain_links
 %                    property appropriately populated
+%
+% chain_linkages.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % Allow the user to run this script as a starting point, will call
     % the previous scripts in the pipeline and obtain the necessary data
@@ -92,6 +94,10 @@ function carboxysome_data = chain_linkages(filename, carboxysome_data, min_dista
                 g(end+1)= 0;
             end
             g(c) = g(c)+1;
+            if c == 9
+                carb.carb_index
+                iChain.index
+            end
         end
         carb.chain_links = lattices; % store the chain pairs in the carboxysome object
     end

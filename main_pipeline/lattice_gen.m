@@ -17,6 +17,8 @@ function carboxysome_data = lattice_gen(filename, carboxysome_data, threshold)
 % Outputs
 % carboxysome_data - an array of Carboxysome objects with the linkages and
 %                    max_connections properties populated
+%
+% lattice_gen.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % Allow the user to run this script as a starting point, will call
     % the previous scripts in the pipeline and obtain the necessary data
