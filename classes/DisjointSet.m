@@ -1,5 +1,8 @@
 classdef DisjointSet < handle
 % data structure used to classify rubisco chains and later lattices
+%
+% DisjointSet.m © 2025 is licensed under CC BY-NC-SA 4.0
+
     properties
         % list of every element's parent in the disjoint set
         parent

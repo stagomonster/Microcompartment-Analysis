@@ -1,5 +1,8 @@
 classdef ChainType
-    % Model for types of chains
+% Model for types of chains
+%
+% ChainType.m © 2025 is licensed under CC BY-NC-SA 4.0
+
     enumeration
         attached % chain has 1 or 2 outer rubiscos
         free % entirely made of inner rubiscos

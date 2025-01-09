@@ -1,5 +1,8 @@
 classdef Rubisco_Chain < handle
-    % Rubisco Chain Model
+% Rubisco Chain Model
+%
+% Rubisco_Chain.m © 2025 is licensed under CC BY-NC-SA 4.0
+
     properties
         length = nan; % length of rubisco chain
         reg = nan; % carboxysome id

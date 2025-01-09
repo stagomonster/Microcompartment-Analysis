@@ -1,5 +1,7 @@
 classdef Carboxysome < handle
 % Model for Carboxysome
+%
+% Carboxysome.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     properties
         carb_index = nan; % carboxysome tag

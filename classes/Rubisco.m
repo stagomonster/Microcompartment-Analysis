@@ -1,5 +1,7 @@
 classdef Rubisco < handle
-    % Model for storing data read from the .tbl file in a convinient way
+% Model for storing data read from the .tbl file in a convinient way
+%
+% Rubisco.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     properties
         tag = nan; % The rubisco's identifying number

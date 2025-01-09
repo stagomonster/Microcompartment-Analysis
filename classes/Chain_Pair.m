@@ -1,5 +1,7 @@
 classdef Chain_Pair < handle
-    % Model for a pair of Rubisco Chains
+% Model for a pair of Rubisco Chains
+%
+% Chain_Pair.m © 2025 is licensed under CC BY-NC-SA 4.0
     properties
         reg = nan; % carb index
         I_index = nan; % index of i chain

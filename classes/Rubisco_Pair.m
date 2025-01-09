@@ -1,5 +1,8 @@
 classdef Rubisco_Pair < handle
-    % Model for a pair of Rubisco
+% Model for a pair of Rubisco
+%
+% Rubisco_Pair.m © 2025 is licensed under CC BY-NC-SA 4.0
+
     properties
         reg = nan; % carb index
         num_rubisco = nan; % number of rubisco in carboxysome

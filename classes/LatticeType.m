@@ -1,5 +1,8 @@
 classdef LatticeType
-    % Model for types of rubisco lattices
+% Model for types of rubisco lattices
+%
+% LatticeType.m © 2025 is licensed under CC BY-NC-SA 4.0
+
     enumeration
         full % rubisco chain is paired with 6 or more other chains
         incomplete % rubisco chain is paired with 4-5 other chains
