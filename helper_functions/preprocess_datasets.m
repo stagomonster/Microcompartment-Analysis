@@ -78,5 +78,6 @@ function preprocess_datasets(varargin)
     
     
     % write processed table
+    fprintf('\nWriting bin2 file: %s\n', outfile);
     dwrite(new_table, outfile);
 end
