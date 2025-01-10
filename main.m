@@ -1,6 +1,12 @@
 function carboxysome_data = main()
-% This main function will simulate the complete script pipeline that must
+% This main function will execute the complete script pipeline that must
 % be followed to obtain the chain and lattice output from an input table.
+%
+% Outputs:
+% carboxysome_data - An array of carboxysome objects populated with data
+%                    from every function in the main pipeline.
+%
+% main.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % Run Dynamo to allow specialized functions
     run /apps/dynamo/1.1.532/dynamo_activate.m
@@ -13,8 +19,8 @@ function carboxysome_data = main()
     % Obtain and process input data
     num_files = input("Is your input in a single file, or is it separated into even and odd files? Enter 1 for a single file or 2 for split files: ");
     if num_files == 1
-        filename = input("Enter the name of your data file. Please ensure that your input data is in bin2: ", "s");
-        outfile = input("What would you like to call your processed input data file? Please end the name with the extension .tbl as the data will be output in this format: ", "s");
+        filename = input("Enter the name of your data file. Please ensure that your input data is in bin1 or 2: ", "s");
+        outfile = input("What would you like to call your processed input data file? Please end the name with .tbl as the data will be output in this format: ", "s");
         clean_value = input("What would you like the clean to be? ");
 
         is_bin2 = input("Is your input file in bin2? Enter 1 if your data is in bin1 or 2 if your data is bin2: ");

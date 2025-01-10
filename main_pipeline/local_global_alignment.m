@@ -222,9 +222,11 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
     
     %% find S orientation tensor for each carboxysome
     for carb = carboxysomes
-        carb.S = op(carb, true);
-        carb.eigenvalues = eigs(carb.S);
-        carb.S_val = (3/2)*max(carb.eigenvalues);
+        if carb.num_rubisco_inner > 0
+            carb.S = op(carb, true);
+            carb.eigenvalues = eigs(carb.S);
+            carb.S_val = (3/2)*max(carb.eigenvalues);
+        end
     end
     
     % assign for function output

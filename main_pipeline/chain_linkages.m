@@ -94,10 +94,6 @@ function carboxysome_data = chain_linkages(filename, carboxysome_data, min_dista
                 g(end+1)= 0;
             end
             g(c) = g(c)+1;
-            if c == 9
-                carb.carb_index
-                iChain.index
-            end
         end
         carb.chain_links = lattices; % store the chain pairs in the carboxysome object
     end
