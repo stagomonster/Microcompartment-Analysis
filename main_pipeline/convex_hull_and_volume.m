@@ -62,9 +62,15 @@ function carboxysome_data = convex_hull_and_volume(filename)
             end
         end
     
-        tags_inside = [inside_rubisco.tag];
-        num_rubisco_inner = length(tags_inside);
-        num_rubisco_outer = length(curr_data) - num_rubisco_inner;
+        if ~isempty(inside_rubisco)
+            tags_inside = [inside_rubisco.tag];
+            num_rubisco_inner = length(tags_inside);
+            num_rubisco_outer = length(curr_data) - num_rubisco_inner;
+        else
+            tags_inside = [];
+            num_rubisco_inner = 0;
+            num_rubisco_outer = length(curr_data);
+        end
     
         %% Compute Normals and Centroids
         normals = zeros(size(convex_hull));
