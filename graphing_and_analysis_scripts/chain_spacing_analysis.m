@@ -115,17 +115,13 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     % Make labels for the x axis of the format [-45,-40), for example.
     % Matlab puts values on the edge of two bins in the larger bin, so we
     % use an open parenthesis on the right
-    for i = 1:length(custom_bins) - 1
-        if i == length(custom_bins) - 1
-            % the largest bin gets a closed parenthesis on the right
-            this_label = ['[',num2str(custom_bins(i)),',',num2str(custom_bins(i+1)),']'];
-        else
-            this_label = ['[',num2str(custom_bins(i)),',',num2str(custom_bins(i+1)),')'];
-        end
+    for i = 1:10
+        % the largest bin gets a closed parenthesis on the right
+        this_label = num2str(10 * (i-1));
 
         x_axis_labels{end+1} = this_label; % add label to list of labels
     end
-    xticks(1:length(custom_bins) - 1); % make enough ticks for each bin
+    xticks(0:5:45); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels
     
     % create and edit the colorbar
@@ -174,6 +170,7 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     % Make some labels for the plot
     title('Probability Density of Lateral Distance Between Chains');
     xlabel('Distance Between Chains (nm)');
+    xticks(0:10:max(distances));
     ylabel('Probability Density');
 
     % create the colorbar

@@ -96,12 +96,12 @@ function carboxysome_data = chain_maker(filename, carboxysome_data, min_chain_le
     end
 
     if size(table_to_edit, 1) < size(original_table, 1) % if particles were deleted
-        dwrite(table_to_edit, 'problems_deleted.tbl'); % write the new file without bad particles
+        dwrite(table_to_edit, '../data/problems_deleted.tbl'); % write the new file without bad particles
 
-        % tell the user what happened and recommend they start over
+        % tell the user about particle deletion and recommend they start over
         fprintf('%i particles were deleted that caused a rubisco to have 2 linkages above (or below) it.\n', size(original_table, 1) - size(table_to_edit, 1));
         fprintf('Particle deletion was done to the particle with the lowest cc value among those involved in the error.\n')
-        fprintf('A file called "problems_deleted.tbl" was created without these problem particles.\n');
+        fprintf('A file called "problems_deleted.tbl" was created in the "data" directory without these problem particles.\n');
         fprintf('The original table is unaltered, but it is not recommended to proceed with the current data.\n');
         fprintf('Future analysis depends upon knowing which rubiscos are above and below each other in a chain.\n');
         fprintf('It is recommended to start the pipeline over with the new .tbl file.\n');

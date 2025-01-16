@@ -14,14 +14,15 @@ function carboxysome_data = main()
     % Add matlab paths to access scripts in this package
     addpath('helper_functions/');
     addpath('main_pipeline/');
-    addpath('classes');
+    addpath('classes/');
+    addpath('data/');
 
-    % Obtain and process input data
+    % Obtain and process input data from file
     num_files = input("Is your input in a single file, or is it separated into even and odd files? Enter 1 for a single file or 2 for split files: ");
     if num_files == 1
         filename = input("Enter the name of your data file. Please ensure that your input data is in bin1 or 2: ", "s");
-        outfile = input("What would you like to call your processed input data file? Please end the name with .tbl as the data will be output in this format: ", "s");
-        clean_value = input("What would you like the clean to be? ");
+        outfile = input("What would you like to call your processed input data file? Please end the name with .tbl: ", "s");
+        clean_value = input("What would you like the clean size to be? ");
 
         is_bin2 = input("Is your input file in bin2? Enter 1 if your data is in bin1 or 2 if your data is bin2: ");
         if is_bin2 == 2
@@ -36,7 +37,7 @@ function carboxysome_data = main()
     elseif num_files == 2
         odd_filename = input("Enter the name of the odd input data file: ", "s");
         even_filename = input("Enter the name of the even input data file: ", "s");
-        outfile = input("What would you like to call your processed input data file? Please end the name with the extension .tbl as the data will be output in this format: ", "s");
+        outfile = input("What would you like to call your processed input data file? Please end the name with the extension .tbl: ", "s");
         clean_value = input("What would you like the clean to be? ");
 
         is_bin2 = input("Is your input file in bin2? Enter 1 if your data is in bin1 or 2 if your data is bin2: ");
@@ -90,9 +91,9 @@ function carboxysome_data = main()
     else
         min_factor = input('Enter the minimum distance to search along the particle axis in terms of a multiple of the particle diameter: ');
         max_factor = input('Enter the maximum distance to search along the particle axis in terms of a multiple of the particle diameter: ');
-        rad_factor = input('Enter the maximum distance to search outward from the particle axis in terms of a multiple of the particle diameter: ');
+        rad_factor = input('Enter the maximum distance to search radially from the particle axis in terms of a multiple of the particle diameter: ');
         max_angle = input('Enter the maximum angle between particle axes to search in (in degrees): ');
-        mutual = input('Do you want to turn on mutual? Enter 1 for yes, 0 for no: ');
+        mutual = input("Do you want to require that both particles in a given pair be in each other's search volumes? Enter 1 for yes, 0 for no: ");
         carb_linkages = linkages(filename, carb_local, min_factor, max_factor, rad_factor, max_angle, mutual);
     end
 
@@ -110,7 +111,7 @@ function carboxysome_data = main()
     if strcmp(start_over, 'n')
         %% STEP 5: CHAIN LINKAGES
         fprintf('\nChain Linkages:\n');
-        chain_links_choice = input('Would you like to use a custom set of parameters or a default set? Enter "custom" or "default": ', 's');
+        chain_links_choice = input('Would you like to use a custom set of parameters or the default set? Enter "custom" or "default": ', 's');
         
         if strcmp(chain_links_choice, 'default')
             carb_chain_links = chain_linkages(filename, carb_chains);

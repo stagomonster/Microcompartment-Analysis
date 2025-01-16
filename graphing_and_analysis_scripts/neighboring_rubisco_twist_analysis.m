@@ -105,8 +105,7 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
     xticklabels(x_axis_labels); % load the x axis labels
     
     % create and edit the colorbar
+    caxis([min(z_values), max(z_values)]);
     c = colorbar('Location', 'southoutside'); % colorbar location
     c.Label.String = 'Inner Rubisco Concentration (\muM)';
-    c.Ticks = [0, 0.25, 0.5, 0.75, 1];
-    c.TickLabels = round(linspace(min(plotz, [], "all"), max(plotz, [], "all"), 5), 0);
 end

@@ -22,7 +22,7 @@ function preprocess_datasets(varargin)
     % concatenate even and odd data if 2 input files are given
     if nargin < 2
         error("You must provide at least 2 parameters: input file name and output file name");
-    else
+    else % read user inputs into variables
         if nargin == 4
             new_table = dread(varargin{1});
             clean_value = varargin{3};
@@ -33,8 +33,10 @@ function preprocess_datasets(varargin)
         else
             odd_data = dread(varargin{1});
             clean_value = varargin{4};
+            % Run a clean on odd data
             odd_data = dpktbl.exclusionPerVolume(odd_data, clean_value);
             even_data = dread(varargin{2});
+            % Run a clean on even data
             even_data = dpktbl.exclusionPerVolume(even_data, clean_value);
             new_table = [odd_data; even_data];
             outfile = varargin{3};
@@ -78,6 +80,7 @@ function preprocess_datasets(varargin)
     
     
     % write processed table
-    fprintf('\nWriting bin2 file: %s\n', outfile);
+    fprintf('\nWriting bin2 file to "Data" directory: %s\n', outfile);
+    outfile = strcat('data/', outfile);
     dwrite(new_table, outfile);
 end
