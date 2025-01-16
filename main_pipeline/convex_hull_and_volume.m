@@ -6,9 +6,10 @@ function carboxysome_data = convex_hull_and_volume(filename)
 %
 % convex_hull_and_volume.m © 2025 is licensed under CC BY-NC-SA 4.0
     
-    % add paths to required helper functions and classes
+    % add paths to required helper functions, classes, and data
     addpath('../helper_functions/');
     addpath('../classes/');
+    addpath('../data/');
 
     %% important constants
     % load constants from external file. change constants in file depending on 
