@@ -8,8 +8,8 @@ classdef Rubisco_Chain < handle
         reg = nan; % carboxysome id
         index = nan; % chain id
         tag = nan;
-        tags = []; % tags of rubiscos in chain
-        indices = []; % indices of rubiscos in chain
+        tags uint32 = uint32([]); % tags of rubiscos in chain
+        indices uint32 = uint32([]); % indices of rubiscos in chain
         average_vector = []; % average vector of rubiscos in chain
         centroid = []; % centroid of chain
         eigenvalues = []; % eigenvalues of the S tensor
@@ -27,7 +27,7 @@ classdef Rubisco_Chain < handle
                 chain.reg = reg;
                 chain.tags = tags;
                 chain.length = length(tags);
-                chain.indices = indices;
+                chain.indices = uint32(indices);
                 chain.type = type;
                 chain.index = index;
                 chain.tag = tag;
