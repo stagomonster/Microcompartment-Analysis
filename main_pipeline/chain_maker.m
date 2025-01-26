@@ -56,7 +56,7 @@ function carboxysome_data = chain_maker(filename, carboxysome_data, min_chain_le
         
         % generates the chains using the output from the previous section
         for i = 1:length(chains) % for each chain in the carboxysome
-            tags = [];
+            tags = uint32([]);
             chain = chains{i};
             % does not allow for chains of length smaller than the user specifies
             if length(chain) < min_chain_length; continue; end
