@@ -56,7 +56,7 @@ function carboxysome_data = chain_maker(filename, carboxysome_data, min_chain_le
         
         % generates the chains using the output from the previous section
         for i = 1:length(chains) % for each chain in the carboxysome
-            tags = [];
+            tags = uint32([]);
             chain = chains{i};
             % does not allow for chains of length smaller than the user specifies
             if length(chain) < min_chain_length; continue; end
@@ -84,7 +84,7 @@ function carboxysome_data = chain_maker(filename, carboxysome_data, min_chain_le
             end
 
             % create an instance of a rubisco chain object
-            rubisco_chain = Rubisco_Chain(carb.carb_index, id, tag, tags, chain, type);
+            rubisco_chain = Rubisco_Chain(carb.carb_index, id, tag, tags, uint32(chain), type);
             table_to_edit = fill_data(carb, rubisco_chain, table_to_edit);
             rubisco_chains(end+1) = rubisco_chain;
             id = id+1;
