@@ -4,10 +4,10 @@ classdef Rubisco_Chain < handle
 % Rubisco_Chain.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     properties
-        length = nan; % length of rubisco chain
-        reg = nan; % carboxysome id
-        index = nan; % chain id
-        tag = nan;
+        length uint32 = nan; % length of rubisco chain
+        reg uint32 = nan; % carboxysome id
+        index uint32 = nan; % chain id
+        tag uint32 = nan;
         tags uint32 = uint32([]); % tags of rubiscos in chain
         indices uint32 = uint32([]); % indices of rubiscos in chain
         average_vector = []; % average vector of rubiscos in chain
@@ -27,7 +27,7 @@ classdef Rubisco_Chain < handle
                 chain.reg = reg;
                 chain.tags = tags;
                 chain.length = length(tags);
-                chain.indices = uint32(indices);
+                chain.indices = indices;
                 chain.type = type;
                 chain.index = index;
                 chain.tag = tag;

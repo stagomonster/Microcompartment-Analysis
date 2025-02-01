@@ -4,19 +4,19 @@ classdef Carboxysome < handle
 % Carboxysome.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     properties
-        carb_index = nan; % carboxysome tag
+        carb_index uint16 = nan; % carboxysome tag
         rubisco = Rubisco.empty; % array of rubisco objects in the carboxysome
-        num_rubisco = nan; % number of rubisco in carboxysome
-        num_rubisco_inner = nan; % number of rubisco inside the boundary of the convex hull
-        num_rubisco_outer = nan; % number of rubisco on the boundary of the convex hull
-        tags_inside = []; % tags of the rubisco inside the boundary 
+        num_rubisco uint16 = nan; % number of rubisco in carboxysome
+        num_rubisco_inner uint16 = nan; % number of rubisco inside the boundary of the convex hull
+        num_rubisco_outer uint16 = nan; % number of rubisco on the boundary of the convex hull
+        tags_inside uint32 = uint32([]); % tags of the rubisco inside the boundary 
         convex_hull = []; % traingulation matrix for the convex hull
         vertices = []; % coordinates of the vertices of the convex hull. Each row is a row vector corresponding to the position of the vertex in R^3
         coordinates = []; % coordinates of the rubisco within the carboxysome.
         volume = nan; % volume of carboxysome
         concentration = nan; % concentration of rubisco in carboxysome (micro-molar)
         inner_concentration = nan; % concentration of rubisco within convex hull boundary (micro-molar)
-        num_events = nan; % number of rubiscos which are neighbors and well aligned
+        num_events uint16 = nan; % number of rubiscos which are neighbors and well aligned
         rubisco_pairs = Rubisco_Pair.empty; % pairs of Rubisco
         normals = []; % each row is a normal vector to the corresponding facet row in convex_hull
         centroids = []; % each row is the centroid of the facet in the corresponding row in convex_hull
@@ -28,8 +28,8 @@ classdef Carboxysome < handle
         chains = Rubisco_Chain.empty; % list of rubisco chain objects in the carboxysome
         chain_links = Chain_Pair.empty; % list of chain pair objects in the carboxysome
         lattice = Rubisco_Chain.empty; % list of lattices in the carboxysome
-        max_connections = 0; % max number of pairs to a single chain
-        tomo = nan; % tomogram index this carboxysome belongs to
+        max_connections uint16 = 0; % max number of pairs to a single chain
+        tomo uint16 = nan; % tomogram index this carboxysome belongs to
         lattice_type = LatticeType.none; % Type of carboxysome lattice
     end
 

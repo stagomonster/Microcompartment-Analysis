@@ -4,8 +4,8 @@ classdef Rubisco < handle
 % Rubisco.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     properties
-        tag = nan; % The rubisco's identifying number
-        index = nan; % Rubisco's place in its carboxysome
+        tag uint32 = nan; % The rubisco's identifying number
+        index uint16 = nan; % Rubisco's place in its carboxysome
         aligned = 0; % A boolean, 1 if the particle underwent alignment
         averaged = 0; % A boolean, 1 if the particle was included in an average
         dx = nan; % x, y, and z offsets from the center of its subtomogram
@@ -24,10 +24,10 @@ classdef Rubisco < handle
         xmaxtilt = nan;
         fs1 = nan; % Fourier sampling free parameters
         fs2 = nan;
-        tomo = nan; % tomogram it belongs to
-        reg = nan; % carboxysome it belongs to
-        class = nan; % particle class
-        annotation = nan; % arbitrary label
+        tomo uint16 = nan; % tomogram it belongs to
+        reg uint16 = nan; % carboxysome it belongs to
+        class uint16 = nan; % particle class
+        annotation uint16 = nan; % arbitrary label
         x = nan; % x, y, and z coordinates of subtomogram box center
         y = nan;
         z = nan;

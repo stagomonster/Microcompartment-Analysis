@@ -4,15 +4,15 @@ classdef Rubisco_Pair < handle
 % Rubisco_Pair.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     properties
-        reg = nan; % carb index
-        num_rubisco = nan; % number of rubisco in carboxysome
-        num_rubisco_inner = nan; % number of inner rubisco in carboxysome
+        reg uint16 = nan; % carb index
+        num_rubisco uint16 = nan; % number of rubisco in carboxysome
+        num_rubisco_inner uint16 = nan; % number of inner rubisco in carboxysome
         volume = nan; % volume of carboxysome
         inner = false; % true if both rubisco are inner rubisco
-        I_index = nan; % index of i rubisco
-        J_index = nan; % index of j rubisco
-        I_tag = nan; % tag of i rubisco
-        J_tag = nan; % tag of j rubsico
+        I_index uint16 = nan; % index of i rubisco
+        J_index uint16 = nan; % index of j rubisco
+        I_tag uint16 = nan; % tag of i rubisco
+        J_tag uint16 = nan; % tag of j rubsico
         angle = nan; % angle between rubisco (degrees)
         distance = nan; % distance between rubisco centers in pixels
         concentration = nan; % concentration of carboxysome
