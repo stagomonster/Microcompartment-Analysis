@@ -84,14 +84,17 @@ function [] = angle_with_outer_shell(carboxysome_data, bin_width)
     hold on;
     scatter(1:length(custom_bins) - 1, random_counts, 150, 'filled', 'MarkerFaceColor', [1 0.4 0.3], 'MarkerFaceAlpha', 0.7); % plot random data
 
-    % Link the concentration data to a colormap
-    cmap = colormap('winter');
-    zmap = linspace(min(concentrations), max(concentrations), length(cmap));
+    % Link the concentration data to a colormap if there are multiple
+    % carboxysomes
+    if length(carboxysome_data) > 1
+        cmap = colormap('winter');
+        zmap = linspace(min(concentrations), max(concentrations), length(cmap));
 
-    % Color each data point based on where it is between the min and max
-    for i = 1:length(b)
-        b(i).CData = interp1(zmap, cmap, z_values(i)); % set the proportional color to the bar's color
-        b(i).EdgeColor = 'none'; % remove the edges of the bars
+        % Color each data point based on where it is between the min and max
+        for i = 1:length(b)
+            b(i).CData = interp1(zmap, cmap, z_values(i)); % set the proportional color to the bar's color
+            b(i).EdgeColor = 'none'; % remove the edges of the bars
+        end
     end
 
     % Make some labels for the plot
@@ -120,11 +123,13 @@ function [] = angle_with_outer_shell(carboxysome_data, bin_width)
     xticks(1:length(custom_bins) - 1); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels
 
-    % Edit the colorbar
-    c = colorbar('Location', 'southoutside'); % colorbar location
-    c.Label.String = 'Rubisco Concentration(\muM)'; % colorbar title
-    c.Ticks = [0, 0.25, 0.5, 0.75, 1];
-    c.TickLabels = round(linspace(min(concentrations), max(concentrations), 5), 0); % colorbar labels
+    if length(carboxysome_data) > 1
+        % Edit the colorbar
+        c = colorbar('Location', 'southoutside'); % colorbar location
+        c.Label.String = 'Rubisco Concentration(\muM)'; % colorbar title
+        c.Ticks = [0, 0.25, 0.5, 0.75, 1];
+        c.TickLabels = round(linspace(min(concentrations), max(concentrations), 5), 0); % colorbar labels
+    end
 end
 
 %% helper functions

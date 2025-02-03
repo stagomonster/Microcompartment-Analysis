@@ -110,14 +110,20 @@ function affinity_by_sites(filename, carboxysome_data, label, min_chain_length)
 
     writetable(affinity_table, ['polymerizationTable' label '.csv'])
 
-    ft = fittype('a*exp(b*x)');
-
-    % first the total concentration plot data to an exponential
-    opts = fitoptions('Method', 'NonlinearLeastSquares');
-    opts.Lower = [0, 0];  % Lower bounds for a and b
-    opts.Upper = [0.1, 0.1];  % Upper bounds for a and b
-
-    [fitresult, gof] = fit(xData', yData', ft, opts);
+    if length(carboxysome_data) > 1
+        ft = fittype('a*exp(b*x)');
+    
+        % first the total concentration plot data to an exponential
+        opts = fitoptions('Method', 'NonlinearLeastSquares');
+        opts.Lower = [0, 0];  % Lower bounds for a and b
+        opts.Upper = [0.1, 0.1];  % Upper bounds for a and b
+    
+        [fitresult, gof] = fit(xData', yData', ft, opts);
+    
+        % display fit results to the command window
+        disp(gof);
+        disp(fitresult);
+    end
 
     if ~isempty(label)
         label = ['(' label ')'];
@@ -146,8 +152,4 @@ function affinity_by_sites(filename, carboxysome_data, label, min_chain_length)
     bubblelegend('Carboxysome Volume \mum^3', 'Location', 'northeastoutside'); % size points by carboxysome volume
     
     hold off;
-
-    % display fit results to the command window
-    disp(gof);
-    disp(fitresult);
 end

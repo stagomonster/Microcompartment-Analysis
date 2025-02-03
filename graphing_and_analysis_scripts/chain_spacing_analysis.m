@@ -93,15 +93,17 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     figure;
     b = bar(1:length(custom_bins)-1, plotdata, 'stacked', 'FaceColor', 'flat'); % make a stacked bar graph
 
-    % link the z data to a colormap
-    cmap = colormap('winter');
-    zmap = linspace(min(z_values), max(z_values), length(cmap));
-    
-    % Color each data point based on where it is between the min and max
-    for i = 1:length(b)
-        % make the bar's color proportional to its z value's distance between z_min and z_max
-        b(i).CData = interp1(zmap, cmap, z_values(i));
-        b(i).EdgeColor = 'none'; % remove the edges of the bars
+    % link the z data to a colormap if there are multiple carboxysomes
+    if length(carboxysome_data) > 1
+        cmap = colormap('winter');
+        zmap = linspace(min(z_values), max(z_values), length(cmap));
+        
+        % Color each data point based on where it is between the min and max
+        for i = 1:length(b)
+            % make the bar's color proportional to its z value's distance between z_min and z_max
+            b(i).CData = interp1(zmap, cmap, z_values(i));
+            b(i).EdgeColor = 'none'; % remove the edges of the bars
+        end
     end
 
     % Make some lables for the plot
@@ -124,10 +126,12 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     xticks(0:5:45); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels
     
-    % create and edit the colorbar
-    caxis([min(z_values), max(z_values)]);
-    c = colorbar('Location', 'southoutside');
-    c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
+    % create and edit the colorbar if needed
+    if length(carboxysome_data) > 1
+        caxis([min(z_values), max(z_values)]);
+        c = colorbar('Location', 'southoutside');
+        c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
+    end
 
     %% Distances Between Chains Plot
     % get bandwidth from user
@@ -154,7 +158,14 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
         density_x = linspace(min(x_data), max(x_data), 200);
 
         this_pdf = pdf(pdf_array{i}, density_x); % calculate the y values from the pdf
-        plot_color = interp1(zmap, cmap, unique(z_data)); % set the color of the line
+
+        % set the color of the line
+        if length(carboxysome_data) > 1
+            plot_color = interp1(zmap, cmap, unique(z_data));
+        else
+            plot_color = 'red';
+        end
+
         plot(density_x, this_pdf, 'LineWidth', 2, 'color', plot_color); % plot the density
     end
 
@@ -173,10 +184,12 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     xticks(0:10:max(distances));
     ylabel('Probability Density');
 
-    % create the colorbar
-    caxis([min(dist_inner_concs), max(dist_inner_concs)]); % set colorbar tick labels
-    c = colorbar('Location', 'southoutside');
-    c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
+    % create the colorbar if needed
+    if length(carboxysome_data) > 1
+        caxis([min(dist_inner_concs), max(dist_inner_concs)]); % set colorbar tick labels
+        c = colorbar('Location', 'southoutside');
+        c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
+    end
 end
 
  %% Helper Functions
