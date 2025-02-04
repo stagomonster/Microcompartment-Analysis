@@ -57,9 +57,12 @@ function [] = neighboring_rubisco_alignment_analysis(carboxysome_data, max_dista
     figure;
     hold on;
 
-    % Link the concentration data to a colormap
-    cmap = colormap('winter');
-    zmap = linspace(min(concentrations), max(concentrations), length(cmap));
+    % Link the concentration data to a colormap if there are multiple
+    % carboxysomes
+    if length(carboxysome_data) > 1
+        cmap = colormap('winter');
+        zmap = linspace(min(concentrations), max(concentrations), length(cmap));
+    end
 
     % for each carboxysome, make a plot
     for i = 1:length(group_names)
@@ -71,7 +74,14 @@ function [] = neighboring_rubisco_alignment_analysis(carboxysome_data, max_dista
         density_x = linspace(min(x_data), max(x_data), 200);
 
         this_pdf = pdf(pdf_array{i}, density_x); % calculate the y values from the pdf
-        plot_color = interp1(zmap, cmap, unique(z_data)); % set the color of the line
+
+        % set the color of the line
+        if length(carboxysome_data) > 1
+            plot_color = interp1(zmap, cmap, unique(z_data));
+        else
+            plot_color = 'blue';
+        end
+
         plot(density_x, this_pdf, 'LineWidth', 2, 'color', plot_color); % plot the density
     end
 
@@ -107,10 +117,12 @@ function [] = neighboring_rubisco_alignment_analysis(carboxysome_data, max_dista
     xlabel('Angle Between a Reference RuBisCO and its Nearest Neighbors (deg)');
     ylabel('Probability Density');
 
-    % create the colorbar
-    caxis([min(concentrations), max(concentrations)]); % set colorbar tick labels
-    c = colorbar('Location', 'southoutside');
-    c.Label.String = 'Rubisco Concentration (\muM)'; % colorbar title
+    % create the colorbar if needed
+    if length(carboxysome_data) > 1
+        caxis([min(concentrations), max(concentrations)]); % set colorbar tick labels
+        c = colorbar('Location', 'southoutside');
+        c.Label.String = 'Rubisco Concentration (\muM)'; % colorbar title
+    end
 end
 
     %% Helper Functions

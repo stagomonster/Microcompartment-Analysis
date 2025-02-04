@@ -71,13 +71,18 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
     
     figure;
     b = bar(1:length(custom_bins)-1, plotdata, 'stacked', 'FaceColor', 'flat'); % make a stacked bar graph
-    cmap = colormap('winter');
-    zmap = linspace(min(z_values), max(z_values), length(cmap));
-    
-    % Color each data point based on where it is between the min and max
-    for i = 1:length(b)
-        b(i).CData = interp1(zmap, cmap, z_values(i)); % set the proportional color to the bar's color
-        b(i).EdgeColor = 'none'; % remove the edges of the bars
+
+    % Link the concentration data to a colormap if there are multiple
+    % carboxysomes
+    if length(carboxysome_data) > 1
+        cmap = colormap('winter');
+        zmap = linspace(min(z_values), max(z_values), length(cmap));
+        
+        % Color each data point based on where it is between the min and max
+        for i = 1:length(b)
+            b(i).CData = interp1(zmap, cmap, z_values(i)); % set the proportional color to the bar's color
+            b(i).EdgeColor = 'none'; % remove the edges of the bars
+        end
     end
 
     % Make some lables for the plot
@@ -104,8 +109,10 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
     xticks(1:length(custom_bins) - 1); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels
     
-    % create and edit the colorbar
-    caxis([min(z_values), max(z_values)]);
-    c = colorbar('Location', 'southoutside'); % colorbar location
-    c.Label.String = 'Inner Rubisco Concentration (\muM)';
+    % create and edit the colorbar if needed
+    if length(carboxysome_data) > 1
+        caxis([min(z_values), max(z_values)]);
+        c = colorbar('Location', 'southoutside'); % colorbar location
+        c.Label.String = 'Inner Rubisco Concentration (\muM)';
+    end
 end
