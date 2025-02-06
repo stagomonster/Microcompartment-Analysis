@@ -84,7 +84,7 @@ function [] = neighboring_rubisco_bend_analysis(carboxysome_data, bin_limit, bin
     % Link the concentration data to a colormap if there are multiple
     % carboxysomes
     if length(carboxysome_data) > 1
-        cmap = colormap('parula');
+        cmap = colormap('winter');
         zmap = linspace(min(z_values), max(z_values), length(cmap));
         
         % Color each data point based on where it is between the min and max

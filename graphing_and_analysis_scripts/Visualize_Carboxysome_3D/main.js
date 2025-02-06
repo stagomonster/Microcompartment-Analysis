@@ -1,4 +1,3 @@
-// main.js © 2025 is licensed under CC BY-NC-SA 4.0
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
@@ -89,7 +88,7 @@ function calculateCenterOfMass(rubs) {
   return centerOfMass.map(c => c / rubs.length);
 }
 
-function drawCarb(rubs, tagsOfInterest) {
+function drawCarb(rubs, tagsOfInterest, particle_size) {
   // Clear existing objects from scene
   rubShapeData.forEach(({ rub, tagElement }) => {
     scene.remove(rub);
@@ -103,7 +102,7 @@ function drawCarb(rubs, tagsOfInterest) {
     params.randomChainColors = tagsOfInterest.map(() => generateRandomColor());
   }
 
-  geometry = new THREE.CylinderGeometry(params.radius, params.radius, 45, 4, 1);
+  geometry = new THREE.CylinderGeometry(params.radius, params.radius, particle_size, 4, 1);
 
   rubs.forEach(r => {
     let color;
@@ -143,7 +142,7 @@ function drawCarb(rubs, tagsOfInterest) {
 function updateRadius() {
   rubShapeData.forEach(({ rub }) => {
     rub.geometry.dispose(); // Dispose of old geometry to prevent memory leaks
-    rub.geometry = new THREE.CylinderGeometry(params.radius, params.radius, 45, 4, 1);
+    rub.geometry = new THREE.CylinderGeometry(params.radius, params.radius, MAX_RUB_RADIUS, 4, 1);
   });
 }
 
@@ -271,6 +270,13 @@ function animate() {
 }
 
 async function main() {
+    const pixel_size = prompt("Please enter the pixel size in nanometers: ");
+
+    const particle_diameter = prompt("Please enter the diameter of your particle in nanometers: ");
+
+    const particle_size = parseFloat(particle_diameter) / parseFloat(pixel_size);
+    const MAX_RUB_RADIUS = particle_size;
+
 	const filename = prompt("Please enter the name of the .tbl file to read: ");
 
 	const header = ["tag", "aligned", "averaged", "dx", "dy", "dz", "tdrot", "tilt", "narot", "cc", "cc2", "cpu", "ftype", "ymintilt", "ymaxtilt", "xmintilt", "xmaxtilt", "fs1", "fs2", "tomo", "reg", "class", "annotation", "x", "y", "z", "dshift", "daxis", "dnarot", "dcc", "otag", "npar", "ref", "sref", "apix", "def", "eig1", "eig2"];
@@ -342,15 +348,15 @@ async function main() {
 	colorFolder.add(params, 'colorMode', ['Random', 'Choose Color']).name('Color Mode').onChange((value) => {
     	  if (value === 'Choose Color') {
       	    // Show uniform color picker if "Choose Color" mode is selected
-      	    uniformColorController = colorFolder.addColor(params, 'uniformColor').name('Uniform Color').onChange(() => {drawCarb(rubs, tagsOfInterest);});
+      	    uniformColorController = colorFolder.addColor(params, 'uniformColor').name('Uniform Color').onChange(() => {drawCarb(rubs, tagsOfInterest, particle_size);});
     	  } else if (uniformColorController) {
       	    // Hide the color picker if switching back to "Random"
       	    colorFolder.remove(uniformColorController);
       	    uniformColorController = null;
     	  }
-    	  drawCarb(rubs, tagsOfInterest);  // Update colors when mode changes
+    	  drawCarb(rubs, tagsOfInterest, particle_size);  // Update colors when mode changes
   	});
-	
+
 	let uniformColorController = null;
 	
 	// Set up renderer
@@ -363,11 +369,11 @@ async function main() {
 	
 	
 	// Draw Carboxysome
-	drawCarb(rubs, tagsOfInterest);
+	drawCarb(rubs, tagsOfInterest, particle_size);
 	
 	// Start animation
 	animate();
-
+    
 	// Create Visibility controls
 	createVisibilityControl();
 
@@ -376,7 +382,7 @@ async function main() {
 	document.addEventListener('keydown', event => {
   	  const key = event.key.toLowerCase();
   	  if (key === 'r' && params.colorMode !== 'Choose Color') {
-	    drawCarb(rubs, tagsOfInterest);
+	    drawCarb(rubs, tagsOfInterest, particle_size);
   	  }
   	  if (key === 't') {
 	    params.showTags = !params.showTags;
