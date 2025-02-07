@@ -1,14 +1,16 @@
 function link_arc_analysis(carboxysome_data, label, pointSize, max_angle)
 % This function generates a scatter plot of the positions of target rubisco
-% relative to source rubisco. On the x-axis is the distance between the
-% rubisco centers perpendicular to the symmetry axis of the source rubisco.
-% On the y-axis is the distance between the rubisco centers along the
-% direction of the symmetry axis of the source rubisco. Both distances are
-% represented as a multiple of the rubisco diameter. The color of each
+% relative to source rubisco. On the y-axis is the distance between the 
+% rubisco centers along the direction of the symmetry axis of the source 
+% rubisco. On the x-axis is the distance between the rubisco centers 
+% perpendicular to the symmetry axis of the source rubisco. Both distances 
+% are represented as a multiple of the rubisco diameter. The color of each
 % point on the plot represents the angle between the axes of symmetry of
-% the two rubisco. The user can specify a label to be included in the
-% figure title, the size of the points on the plot, and the maximum angle
-% between rubisco that are still plotted.
+% the two rubisco. Then the function plots the x data and y data as 
+% histograms on separate figures. The data can be filtered before plotting
+% the histograms for clarity. The user can specify a label to be included 
+% in the scatter plot title, the size of the points on the scatter plot, 
+% and the maximum angle between rubisco that are still plotted.
 %
 % Inputs
 % carboxysome_data - an array of Carboxysome objects already containing
@@ -64,10 +66,13 @@ function link_arc_analysis(carboxysome_data, label, pointSize, max_angle)
         end
     end
 
-    visualize(xData, yData, zData, pointSize, label); % create the figure
+    % create the three plots
+    visualize_scatter(xData, yData, zData, pointSize, label); % create the scatter plot
+    visualize_histogram(xData, yData, 'from'); % create histogram of distances from axis
+    visualize_histogram(yData, xData, 'along'); % create histogram of distances along axis
 end
 
-function visualize(xData, yData, zData, pointSize, label)
+function visualize_scatter(xData, yData, zData, pointSize, label)
 % This function makes the scatterplot, colored by angle between source and
 % target axes. On the y axis is the distance between rubisco along the
 % source's axis. On the x axis is the distance between rubisco away from
@@ -90,4 +95,34 @@ function visualize(xData, yData, zData, pointSize, label)
     ylim([0, 3.5]); % y axis limits
     c = colorbar('fontsize', 14); % create a colorbar for color data
     c.Label.String = 'Angle (Degrees)'; % colorbar title
+end
+
+function visualize_histogram(x_data, filter_data, label)
+% This function makes a histogram. On the y axis is the number of instances
+% of an x axis value. On the x axis is the distance between rubisco either 
+% along the source's axis or from the source's axis (radially). The data
+% depends on what data was passed into x_data.
+
+    % Ask the user if they want to filter the data
+    if strcmp(label, 'from')
+        % filter radial data to exclude points with "along axis" values
+        % greater than a user-defined maximum
+        filter = input(['Plotting Deviation from Central Axis:\nEnter the maximum ' ...
+            'deviation along the central axis a data point can have in this plot (use "inf" to include all): ']);
+    else
+        % filter "along axis" data to exclude points with radial values
+        % greater than a user-defined maximum
+        filter = input(['Plotting Deviation along Central Axis:\nEnter the maximum ' ...
+            'deviation from the central axis a data point can have in this plot (use "inf" to include all): ']);
+    end
+
+    x_data = x_data(filter_data <= filter); % filter the data
+
+    figure;
+    histogram(x_data); % create the histogram
+
+    % Make some labels for the plot
+    title(['Distances Between Monomers ', label, ' Central Axis']);
+    xlabel(['Deviation ', label, ' Central Axis (Monomer Diameters)']);
+    ylabel('Number of Monomers');
 end

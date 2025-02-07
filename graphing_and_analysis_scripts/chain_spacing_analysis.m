@@ -1,4 +1,4 @@
-function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_distance, bin_width)
+function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, bin_width)
 % This function creates two plots regarding the spatial relationships 
 % between chains. First, it makes a histogram of the angles between 
 % neighboring chains. The user can select the width of the histogram bins, 
@@ -13,8 +13,6 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
 %                    least through chain_maker.m
 % min_chain_length - the minimum length a chain can be and still be
 %                    included in this analysis
-% max_distance - the maximum distance (in nanometers) between two chains 
-%                that can still be neighbors
 % bin_width - the width to make bins in the histogram (in degrees)
 %
 % chain_spacing_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
@@ -30,7 +28,7 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     angle_inner_concs = [];
     distances = [];
     carb_ids = [];
-    dist_inner_concs = [];
+    inner_concs = [];
     
     % for each carboxysome in the dataset
     for carb = carboxysome_data
@@ -42,21 +40,81 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
                 % calculate distance and angle between chains
                 [distance, angle] = chain_distance_closest(valid_chains(i), valid_chains(j), carb, rubisco_diameter);
 
-                % Get data for distances plot
+                % Get data for plots
                 distances(end+1) = distance * 1e9 * CONSTANTS.PIXEL_SIZE; % distance in nanometers
                 carb_ids(end+1) = carb.carb_index;
-                dist_inner_concs(end+1) = carb.inner_concentration;
-                
-                if distance < (max_distance*(10^-9)/CONSTANTS.PIXEL_SIZE) % comparison done in pixels
-                    % Get data for angles plot
-                    angles(end+1) = angle;
-                    angle_inner_concs(end+1) = carb.inner_concentration;
-                end
+                inner_concs(end+1) = carb.inner_concentration;
+                angles(end+1) = angle;
             end
         end
     end
 
+    %% Distances Between Chains Plot
+    % get bandwidth from user
+    bandwidth = input('Please enter the bandwidth for the plot (recommended value is 0.5): ');
+
+    % create a kernel probability density function for each carboxysome
+    [pdf_array, ~, group_names] = fitdist(distances', 'Kernel', 'By', carb_ids, 'Kernel', 'Normal', 'Width', bandwidth);
+
+    % start a new plot
+    figure;
+    hold on;
+
+    % Link the inner concentration data to a colormap
+    cmap = colormap('winter');
+    zmap = linspace(min(inner_concs), max(inner_concs), length(cmap));
+
+    % for each carboxysome, make a plot
+    for i = 1:length(group_names)
+        % filter out distances and concentrations in other carboxysomes
+        x_data = distances(carb_ids == str2double(group_names{i}));
+        z_data = inner_concs(carb_ids == str2double(group_names{i}));
+
+        % create 200 evenly spaced data points to sample the density plot
+        density_x = linspace(min(x_data), max(x_data), 200);
+
+        this_pdf = pdf(pdf_array{i}, density_x); % calculate the y values from the pdf
+
+        % set the color of the line
+        if length(carboxysome_data) > 1
+            plot_color = interp1(zmap, cmap, unique(z_data));
+        else
+            plot_color = 'red';
+        end
+
+        plot(density_x, this_pdf, 'LineWidth', 2, 'color', plot_color); % plot the density
+    end
+
+    % create an all-inclusive kernel probability density function and plot
+    overall_pdf = fitdist(distances', 'Kernel', 'Kernel', 'Normal', 'Width', bandwidth);
+
+    % create 100 evenly spaced data points to sample the density plot
+    density_x = linspace(min(distances), max(distances));
+
+    overall_y = pdf(overall_pdf, density_x); % calculate the y values from the pdf
+    plot(density_x, overall_y, 'LineWidth', 2, 'color', 'r'); % plot the overall density in red
+
+    % Make some labels for the plot
+    title('Probability Density of Lateral Distance Between Chains');
+    xlabel('Distance Between Chains (nm)');
+    xticks(0:10:max(distances));
+    ylabel('Probability Density');
+
+    % create the colorbar if needed
+    if length(carboxysome_data) > 1
+        caxis([min(inner_concs), max(inner_concs)]); % set colorbar tick labels
+        c = colorbar('Location', 'southoutside');
+        c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
+    end
+
     %% Angles Between Chains Plot
+    % get upper limit on chain distance from user
+    max_distance = input('Enter the maximum distance to allow between linked chains (in nm): ');
+
+    % filter data by distance selection
+    angles = angles(distances <= max_distance);
+    inner_concs = inner_concs(distances <= max_distance);
+
     custom_bins = 0:bin_width:90; % the edges of the custom bins
     [~, ~, bin_relation] = histcounts(angles, custom_bins); % finds to which bin each bend data point went
     plotz = NaN(length(custom_bins) - 1, length(angles)); % COLORBAR DATA IN SPECIAL FORMAT
@@ -65,7 +123,7 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     % values belong to. Each row in plotz represents a vertical bar. Each
     % column in plotz represents a layer in the bar.
     for i = 1:length(angles)
-        plotz(bin_relation(i), i) = angle_inner_concs(i);
+        plotz(bin_relation(i), i) = inner_concs(i);
     end
     
     % Reorder the data in plotz so each column holds only one value that is
@@ -78,7 +136,7 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
         bookmark = bookmark + length(data_to_move); % update the bookmark
     end
 
-    z_values = unique(sort(angle_inner_concs, 'descend'), 'stable'); % all the unique z values from large to small
+    z_values = unique(sort(inner_concs, 'descend'), 'stable'); % all the unique z values from large to small
     plotdata = zeros(length(custom_bins) - 1, length(z_values)); % the data that will be bar heights
 
     % calculates how many identical values exist in each row of plotz and
@@ -117,13 +175,17 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     % Make labels for the x axis of the format [-45,-40), for example.
     % Matlab puts values on the edge of two bins in the larger bin, so we
     % use an open parenthesis on the right
-    for i = 1:10
-        % the largest bin gets a closed parenthesis on the right
-        this_label = num2str(10 * (i-1));
+    for i = 1:length(custom_bins) - 1
+        if i == length(custom_bins) - 1
+            % the largest bin gets a closed parenthesis on the right
+            this_label = ['[',num2str(custom_bins(i)),',',num2str(custom_bins(i+1)),']'];
+        else
+            this_label = ['[',num2str(custom_bins(i)),',',num2str(custom_bins(i+1)),')'];
+        end
 
         x_axis_labels{end+1} = this_label; % add label to list of labels
     end
-    xticks(0:5:45); % make enough ticks for each bin
+    xticks(1:length(custom_bins) - 1); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels
     
     % create and edit the colorbar if needed
@@ -132,67 +194,9 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
         c = colorbar('Location', 'southoutside');
         c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
     end
-
-    %% Distances Between Chains Plot
-    % get bandwidth from user
-    bandwidth = input('Please enter the bandwidth for the plot (recommended value is 0.5): ');
-
-    % create a kernel probability density function for each carboxysome
-    [pdf_array, ~, group_names] = fitdist(distances', 'Kernel', 'By', carb_ids, 'Kernel', 'Normal', 'Width', bandwidth);
-
-    % start a new plot
-    figure;
-    hold on;
-
-    % Link the inner concentration data to a colormap
-    cmap = colormap('winter');
-    zmap = linspace(min(dist_inner_concs), max(dist_inner_concs), length(cmap));
-
-    % for each carboxysome, make a plot
-    for i = 1:length(group_names)
-        % filter out distances and concentrations in other carboxysomes
-        x_data = distances(carb_ids == str2double(group_names{i}));
-        z_data = dist_inner_concs(carb_ids == str2double(group_names{i}));
-
-        % create 200 evenly spaced data points to sample the density plot
-        density_x = linspace(min(x_data), max(x_data), 200);
-
-        this_pdf = pdf(pdf_array{i}, density_x); % calculate the y values from the pdf
-
-        % set the color of the line
-        if length(carboxysome_data) > 1
-            plot_color = interp1(zmap, cmap, unique(z_data));
-        else
-            plot_color = 'red';
-        end
-
-        plot(density_x, this_pdf, 'LineWidth', 2, 'color', plot_color); % plot the density
-    end
-
-    % create an all-inclusive kernel probability density function and plot
-    overall_pdf = fitdist(distances', 'Kernel', 'Kernel', 'Normal', 'Width', bandwidth);
-
-    % create 100 evenly spaced data points to sample the density plot
-    density_x = linspace(min(distances), max(distances));
-
-    overall_y = pdf(overall_pdf, density_x); % calculate the y values from the pdf
-    plot(density_x, overall_y, 'LineWidth', 2, 'color', 'r'); % plot the overall density in red
-
-    % Make some labels for the plot
-    title('Probability Density of Lateral Distance Between Chains');
-    xlabel('Distance Between Chains (nm)');
-    xticks(0:10:max(distances));
-    ylabel('Probability Density');
-
-    % create the colorbar if needed
-    if length(carboxysome_data) > 1
-        caxis([min(dist_inner_concs), max(dist_inner_concs)]); % set colorbar tick labels
-        c = colorbar('Location', 'southoutside');
-        c.Label.String = 'Inner Rubisco Concentration (\muM)'; % colorbar title
-    end
 end
 
- %% Helper Functions
+%% Helper Functions
 
 function [shortest_distance, angle] = chain_distance_closest(chain_i, chain_j, carb, rubisco_diameter)
 % Determine the distance between two chains. Each chain is broken up into 
