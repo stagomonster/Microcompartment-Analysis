@@ -12,6 +12,7 @@ function carboxysome_data = main()
     run /apps/dynamo/1.1.532/dynamo_activate.m
 
     % Add matlab paths to access scripts in this package
+    addpath('graphing_and_analysis_scripts/')
     addpath('helper_functions/');
     addpath('main_pipeline/');
     addpath('classes/');
@@ -74,7 +75,7 @@ function carboxysome_data = main()
 
     %% STEP 2: LOCAL GLOBAL ALIGNMENT
     fprintf('\nLocal Global Alignment:\n');
-    local_max_distance = input('Enter the maximum distance (in pixels) around a particle you want to search for potential oligimerization partners (to use default value of 2 * rubisco diameter enter "default"): ', 's');
+    local_max_distance = input('Enter the maximum distance (in pixels) around a particle you want to search for potential oligimerization partners (to use default value of 2 * monomer diameter enter "default"): ', 's');
     
     if strcmp(local_max_distance, 'default')
         carb_local = local_global_alignment(filename, carb_volumes);
@@ -82,7 +83,15 @@ function carboxysome_data = main()
         carb_local = local_global_alignment(filename, carb_volumes, str2double(local_max_distance));
     end
 
-    %% STEP 3: LINKAGES
+    %% STEP 3: LINK ANALYSIS
+    fprintf('\nLinkage Analysis:\n');
+    fprintf('Please use the following plots to help choose parameters for a valid linkage.\n');
+    neighboring_rubisco_alignment_analysis(carb_local, 2*(diameter/pixel_size), 0, 0);
+    link_arc_analysis(carb_local);
+    fprintf('Press any key to continue.\n');
+    pause;
+
+    %% STEP 4: LINKAGES
     fprintf('\nLinkages:\n');
     linkages_choice = input('Would you like to use a custom set of parameters or a default set? Enter "custom" or "default": ', 's');
 
@@ -97,7 +106,7 @@ function carboxysome_data = main()
         carb_linkages = linkages(filename, carb_local, min_factor, max_factor, rad_factor, max_angle, mutual);
     end
 
-    %% STEP 4: CHAIN MAKER
+    %% STEP 5: CHAIN MAKER
     fprintf('\nChain Maker:\n');
     chain_min_length = input('Enter the minimum length to be considered a chain or "default" to use the default value of 3: ', 's');
 
@@ -109,7 +118,17 @@ function carboxysome_data = main()
 
     start_over = input('\nWould you like to terminate the program to use the new table (y/n)? ', 's');
     if strcmp(start_over, 'n')
-        %% STEP 5: CHAIN LINKAGES
+        %% STEP 6: CHAIN LINK ANALYSIS
+        fprintf('\nChain Link Analysis:\n');
+        fprintf('Please use the following plots to help choose parameters for a valid chain link.\n');
+
+        if strcmp(chain_min_length, 'default')
+            chain_spacing_analysis(carb_chains, 3, 2);
+        else
+            chain_spacing_analysis(carb_chains, str2double(chain_min_length), 2);
+        end
+
+        %% STEP 7: CHAIN LINKAGES
         fprintf('\nChain Linkages:\n');
         chain_links_choice = input('Would you like to use a custom set of parameters or the default set? Enter "custom" or "default": ', 's');
         
@@ -122,7 +141,7 @@ function carboxysome_data = main()
             carb_chain_links = chain_linkages(filename, carb_chains, min_dist, max_dist, max_angle);
         end    
     
-        %% STEP 6: LATTICE GEN
+        %% STEP 8: LATTICE GEN
         fprintf('\nLattice Gen:\n');
         lattice_threshold = input('Enter the minimum number of linked chains to constitute a lattice or "default" to use the default value of 5: ', 's');
     
