@@ -23,9 +23,14 @@ function [] = rubisco_spacing_analysis(carboxysome_data, min_chain_length)
     distances = [];
     inner_concentrations = [];
     carb_ids = [];
+    last_index = 0;
 
     for carb = carboxysome_data % for each carboxysome
         for chain = carb.chains([carb.chains.length] >= min_chain_length) % for each chain over the minimum length
+            iterations_per_chain = ((length(chain.indices) * (length(chain.indices) - 1 )) / 2);
+            distances = [distances, zeros(iterations_per_chain)];
+            inner_concentrations = [inner_concentrations, zeros(iterations_per_chain)];
+            carb_ids = [carb_ids, zeros(iterations_per_chain)];
             for i = 1:length(chain.indices) - 1 % for each rubisco in the chain
                 for j = i+1:length(chain.indices) % for each other rubisco in the chain
                     % get the indices of the two rubisco to find a linkage
@@ -46,13 +51,22 @@ function [] = rubisco_spacing_analysis(carboxysome_data, min_chain_length)
                     if ~isempty(linkage) % if a linkage exists between the rubiscos
                         % fetch the distance, inner concentration, and
                         % parent carboxysome
-                        distances(end+1) = linkage.distance * 1e9 * CONSTANTS.PIXEL_SIZE; % distance in nm
-                        inner_concentrations(end+1) = carb.inner_concentration;
-                        carb_ids(end+1) = carb.carb_index;
+                        distances(last_index+1) = linkage.distance * 1e9 * CONSTANTS.PIXEL_SIZE; % distance in nm
+                        inner_concentrations(last_index+1) = carb.inner_concentration;
+                        carb_ids(last_index+1) = carb.carb_index;
                     end
                 end
             end
         end
+    end
+    if last_index == 0
+        distances = [];
+        inner_concentrations = [];
+        carb_ids = [];
+    else
+        distances = distances(1:last_index);
+        inner_concentrations = inner_concentrations(1:last_index);
+        carb_ids = carb_ids(1:last_index);
     end
 
     %% Distances Between Adjacent Rubiscos Plot

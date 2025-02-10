@@ -42,27 +42,29 @@ function carboxysome_data = convex_hull_and_volume(filename)
     
         %% find inner and outer rubisco by checking if each rubisco in curr_data is one of the
         % convhull vertices. If it is remove it, if its not keep it.
-        inside_rubisco = [];
+
         verts_x = [x(convex_hull(:, 1)); x(convex_hull(:, 2)); x(convex_hull(:, 3))];
         verts_y = [y(convex_hull(:, 1)); y(convex_hull(:, 2)); y(convex_hull(:, 3))];
         verts_z = [z(convex_hull(:, 1)); z(convex_hull(:, 2)); z(convex_hull(:, 3))];
     
         % filter by unique vertices
         verts = unique([verts_x verts_y verts_z], 'rows');
-    
+        inside_rubisco(curr_data) = Rubisco();
+        last_index = 0; % index of last valid rubisco in inside_rubiscos
         for i = 1:length(curr_data)
             rubisco = curr_data(i);
             rubisco_coordinates = [rubisco.x rubisco.y rubisco.z];
             if ~ismember(rubisco_coordinates, verts, 'rows')
                 rubisco.inside = true; % Set the inside property in the rubisco to be true
-                if isempty(inside_rubisco)
-                    inside_rubisco = [rubisco];
-                else
-                    inside_rubisco(length(inside_rubisco) + 1) = rubisco;
-                end
+                inside_rubisco(last_index + 1) = rubisco;
+                last_index = last_index + 1;
             end
         end
-    
+        if last_index == 0 % edge case handling
+            inside_rubisco = [];
+        else
+            inside_rubisco = inside_rubisco(1:last_index);
+        end
         if ~isempty(inside_rubisco)
             tags_inside = [inside_rubisco.tag];
             num_rubisco_inner = length(tags_inside);
@@ -98,12 +100,21 @@ function carboxysome_data = convex_hull_and_volume(filename)
         for rubisco_idx = 1:length([curr_data])
             if ~ismember(curr_data(rubisco_idx).tag, tags_inside)
                 % find all facets with vertex = carb.rubisco(rubisco_idx)
-                idxs = [];
+                
+                idxs = zeros(length(size(convex_hull, 1))); % preallocate
+                last_index = 0; % last used index of idxs
                 for k = 1:size(convex_hull, 1)
                     if ismember(rubisco_idx, convex_hull(k, :))
-                        idxs = [idxs k];
+                        idxs(last_index + 1) = k;
+                        last_index = last_index + 1;
                     end
                 end
+                if last_index == 0
+                    idxs = [];
+                else
+                    idxs = idxs(1:last_index);
+                end
+                
     
                 norms = normals(idxs, :);
                 ave_vec = sum(norms, 1)/size(norms, 1);
@@ -149,10 +160,11 @@ function carboxysome_data = convex_hull_and_volume(filename)
     
     %% Compute inner concentration
     for carb = carbs
-        x = [];
-        y = [];
-        z = [];
+        x = zeros(length(carb.rubisco));
+        y = zeros(length(carb.rubisco));
+        z = zeros(length(carb.rubisco));
         ave_normals = [];
+        last_index = 0;
         reference = [mean([carb.rubisco.x]), mean([carb.rubisco.y]), mean([carb.rubisco.z])];
 
         % shrink vertices normal to the surface of the carboxysome
@@ -161,11 +173,21 @@ function carboxysome_data = convex_hull_and_volume(filename)
                 new_x = rubisco.x - rubisco_diameter*rubisco.ave_normal(1);
                 new_y = rubisco.y - rubisco_diameter*rubisco.ave_normal(2);
                 new_z = rubisco.z - rubisco_diameter*rubisco.ave_normal(3);
-                x = [x new_x];
-                y = [y new_y];
-                z = [z new_z];
+                x(last_index + 1) = new_x;
+                y(last_index + 1) = new_y;
+                z(last_index + 1) = new_z;
+
                 ave_normals = [ave_normals; rubisco.ave_normal];
             end
+        end
+        if last_index == 0
+            x = [];
+            y = [];
+            z = [];
+        else
+            x = x(1:last_index);
+            y = y(1:last_index);
+            z = z(1:last_index);
         end
     
         % new hull and volume calculation

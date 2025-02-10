@@ -26,7 +26,7 @@ classdef Rubisco < handle
         fs2 = nan;
         tomo uint16 = nan; % tomogram it belongs to
         reg uint16 = nan; % carboxysome it belongs to
-        class uint16 = nan; % particle class
+        class uint16= nan; % particle class
         annotation uint16 = nan; % arbitrary label
         x = nan; % x, y, and z coordinates of subtomogram box center
         y = nan;

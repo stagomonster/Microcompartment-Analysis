@@ -18,10 +18,11 @@ function [] = rubisco_alignment_analysis(carboxysome_data, max_angle, max_distan
 % rubisco_alignment_analysis.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Initialize arrays to hold data to plot
-    valid_rubiscos = [];
-    volumes = [];
-    inner_concentrations = [];
-    total_concentrations = [];
+    valid_rubiscos = zeros(length(carboxysome_data));
+    volumes = zeros(length(carboxysome_data));
+    inner_concentrations = zeros(length(carboxysome_data));
+    total_concentrations = zeros(length(carboxysome_data));
+    last_index = 0;
 
     for carb = carboxysome_data % loop through every carboxysome
         num_valid_pairs = 0; % number of rubisco pairs that satisfy every condition
@@ -36,12 +37,24 @@ function [] = rubisco_alignment_analysis(carboxysome_data, max_angle, max_distan
         end
 
         if num_valid_pairs > 0 % if carboxysome has any valid rubisco pairs
-            valid_rubiscos(end+1) = num_valid_pairs; % store number of valid pairs
-            volumes(end+1) = carb.volume * (10^18); % store carboxysome volume
-            inner_concentrations(end+1) = carb.inner_concentration; % store carboxysome inner concentration
-            total_concentrations(end+1) = carb.concentration; % store carboxysome total concentration
+            valid_rubiscos(last_index + 1) = num_valid_pairs; % store number of valid pairs
+            volumes(last_index + 1) = carb.volume * (10^18); % store carboxysome volume
+            inner_concentrations(last_index + 1) = carb.inner_concentration; % store carboxysome inner concentration
+            total_concentrations(last_index + 1) = carb.concentration; % store carboxysome total concentration
         end
     end
+    if last_index == 0
+        valid_rubiscos = [];
+        volumes = [];
+        inner_concentrations = [];
+        total_concentrations = [];
+    else
+        valid_rubiscos = valid_rubiscos(1:last_index);
+        volumes = volumes(1:last_index);
+        inner_concentrations = inner_concentrations(1:last_index);
+        total_concentrations = total_concentrations(1:last_index);
+    end
+        
 
     % Number of aligned rubiscos vs. Inner Concentration Plot
     bubblechart(inner_concentrations, valid_rubiscos, volumes, total_concentrations); % make bubble chart

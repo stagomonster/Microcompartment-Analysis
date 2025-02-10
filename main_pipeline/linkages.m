@@ -99,8 +99,8 @@ function carboxysome_data = linkages(filename, carboxysome_data, min_distance_fa
         disp(carb.carb_index);
         
         % Initialize an array that will store all the valid linkages
-        links = Rubisco_Pair.empty;
-
+        links(length(carb.rubisco_pairs)) = Rubisco_Pair();
+        last_index = 0;
         % goes through all pairs in the carboxysome
         for pair = carb.rubisco_pairs
             valid = true;
@@ -158,9 +158,14 @@ function carboxysome_data = linkages(filename, carboxysome_data, min_distance_fa
             % vector pointing from source to target Rubisco
             displacement = target_cords - source_cords;
 
-            links(end+1) = pair;
+            links(last_index+1) = pair;
+            last_index = last_index + 1;
         end
-    
+        if last_index == 0
+            links = Rubisco_Pair.empty;
+        else
+            links = links(1:last_index);
+        end
         carb.links = links;
     end
 end

@@ -16,12 +16,15 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
     % create arrays to hold the data that will be plotted
     twists = [];
     inner_concentrations = [];
+    last_index = 0;
 
     % for each carboxysome in the dataset
     for carb = carboxysome_data
         % for each chain with length >= min_chain_length
         for chain = carb.chains([carb.chains.length] >= min_chain_length)
             % for each rubisco linkage in the chain
+            twists = [twists, zeros(length(chain.indices) - 1)];
+            inner_concentrations = [inner_concentrations, zeros(length(chain.indices)- 1)];
             for i = 1:length(chain.indices) - 1
 
                 % get the two adjacent rubisco objects
@@ -30,10 +33,18 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
 
                 % calculate their bend, twist, and inner concentration and
                 % save it to the arrays to be plotted
-                twists(end+1) = calc_twist(rubisco_i, rubisco_j, chain.average_vector);
-                inner_concentrations(end+1) = carb.inner_concentration;
+                twists(last_index + 1) = calc_twist(rubisco_i, rubisco_j, chain.average_vector);
+                inner_concentrations(last_index + 1) = carb.inner_concentration;
+                last_index = last_index + 1;
             end
         end
+    end
+    if last_index == 0
+        twists = [];
+        inner_concentrations = [];
+    else
+        twists = twists(1:last_index);
+        inner_concentrations = inner_concentrations(1:last_index);
     end
 
     custom_bins = -45:bin_width:45; % the edges of the custom bins
@@ -86,8 +97,8 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
     ylabel('Counts');
 
     % Make x axis labels that reflect the actual bin edges
-    x_axis_labels = {};
-
+    x_axis_labels = cell(1,length(custom_bins));
+    last_index = 0;
     % Make labels for the x axis of the format [-45,-40), for example.
     % Matlab puts values on the edge of two bins in the larger bin, so we
     % use an open parenthesis on the right
@@ -99,7 +110,13 @@ function [] = neighboring_rubisco_twist_analysis(carboxysome_data, bin_width, mi
             this_label = ['[',num2str(custom_bins(i)),',',num2str(custom_bins(i+1)),')'];
         end
 
-        x_axis_labels{end+1} = this_label;
+        x_axis_labels{last_index + 1} = this_label;
+        last_index = last_index + 1;
+    end
+    if last_index == 0
+        x_axis_labels = {};
+    else
+        x_axis_labels = x_axis_labels(1:last_index);
     end
     xticks(1:length(custom_bins) - 1); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels

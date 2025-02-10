@@ -82,15 +82,17 @@ function [] = neighboring_rubisco_alignment_analysis(carboxysome_data, max_dista
 
     % generate random vectors
     rand_vectors = compute_random_vectors_marsaglia_72(N);
-    random_angles = []; % initialize an array to hold random angles
-
+    % initialize an array to hold random angles
+    random_angles = zeros((N*(N-1))/2);
+    random_angles_index = 0;
     % for each possible combination of random vectors
     for k = 1:N
         for j = k+1:N
             % calculate the angle between them
-            random_angles(end+1) = calc_angle(rand_vectors(k, :), rand_vectors(j, :));
+            random_angles(random_angles_index + 1) = calc_angle(rand_vectors(k, :), rand_vectors(j, :));
         end
     end
+    
 
     %% Plot Random Angles Density
     % create a kernel probability density function for the random angles

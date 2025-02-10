@@ -16,12 +16,16 @@ function [] = twist_and_bend_analysis_graph(carboxysome_data, min_chain_length)
     bends = [];
     twists = [];
     inner_concentrations = [];
+    last_index = 0;
 
     % for each carboxysome in the dataset
     for carb = carboxysome_data 
         % for each chain with length >= min_chain_length
         for chain = carb.chains([carb.chains.length] >= min_chain_length)
             % for each rubisco linkage in the chain
+            bends = [bends, zeros(length(chain.indices))];
+            twists = [twists,zeros(length(chain.indices))];
+            inner_concentrations = [inner_concentrations,zeros(length(chain.indices))];
             for i = 1:length(chain.indices) - 1
 
                 % get the two adjacent rubisco objects
@@ -30,11 +34,20 @@ function [] = twist_and_bend_analysis_graph(carboxysome_data, min_chain_length)
 
                 % calculate their bend, twist, and inner concentration and
                 % save it to the arrays to be plotted
-                bends(end+1) = calc_bend(rubisco_i, rubisco_j);
-                twists(end+1) = calc_twist(rubisco_i, rubisco_j, chain.average_vector);
-                inner_concentrations(end+1) = carb.inner_concentration;
+                bends(last_index +1) = calc_bend(rubisco_i, rubisco_j);
+                twists(last_index +1) = calc_twist(rubisco_i, rubisco_j, chain.average_vector);
+                inner_concentrations(last_index +1) = carb.inner_concentration;
             end
         end
+    end
+    if last_index == 0
+        bends = [];
+        twists = [];
+        inner_concentrations = [];
+    else
+        bends = bends(1:last_index);
+        twists = twists(1:last_index);
+        inner_concentrations = inner_concentrations(1:last_index);
     end
 
     % Plot the data in a scatter plot

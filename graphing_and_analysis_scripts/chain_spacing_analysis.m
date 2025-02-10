@@ -31,11 +31,22 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     distances = [];
     carb_ids = [];
     dist_inner_concs = [];
+
+    distances_last_index = 0; % for distances, carb_ids, dist_inner_concs
+    angles_last_index = 0; % for angles, angle_inner_concs
     
     % for each carboxysome in the dataset
     for carb = carboxysome_data
         % for each chain with length >= min_chain_length
         valid_chains = carb.chains([carb.chains.length] >= min_chain_length);
+        total_iterations = (length(valid_chains) * length(valid_chains)) / 2 ;
+        distances = [distances, zeros(total_iterations)];
+        carb_ids = [carb_ids, zeros(total_iterations)];
+        dist_inner_concs = [dist_inner_concs, zeros(total_iterations)];
+        angles = [angles, zeros(total_iterations)];
+        angle_inner_concs = [angle_inner_concs, zeros(total_iterations)];
+
+        %using (x)(x-2)/2 formula for total iterations
         for i = 1:length(valid_chains)
             % for each other unchecked valid chain
             for j = i+1:length(valid_chains)
@@ -43,18 +54,38 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
                 [distance, angle] = chain_distance_closest(valid_chains(i), valid_chains(j), carb, rubisco_diameter);
 
                 % Get data for distances plot
-                distances(end+1) = distance * 1e9 * CONSTANTS.PIXEL_SIZE; % distance in nanometers
-                carb_ids(end+1) = carb.carb_index;
-                dist_inner_concs(end+1) = carb.inner_concentration;
+                distances(distances_last_index + 1) = distance * 1e9 * CONSTANTS.PIXEL_SIZE; % distance in nanometers
+                carb_ids(distances_last_index + 1) = carb.carb_index;
+                dist_inner_concs(distances_last_index + 1) = carb.inner_concentration;
+
+                distances_last_index = distances_last_index + 1;
                 
                 if distance < (max_distance*(10^-9)/CONSTANTS.PIXEL_SIZE) % comparison done in pixels
                     % Get data for angles plot
-                    angles(end+1) = angle;
-                    angle_inner_concs(end+1) = carb.inner_concentration;
+                    angles(angles_last_index + 1) = angle;
+                    angle_inner_concs(angles_last_index + 1) = carb.inner_concentration;
+                    angles_last_index = angles_last_index + 1;
                 end
             end
         end
     end
+    if (distances_last_index == 0) 
+        distances = [];
+        carb_ids = [];
+        dist_inner_concs = [];
+    else
+        distances = distances(1:distances_last_index);
+        carb_ids = carb_ids(1:distances_last_index);
+        dist_inner_concs = dist_inner_concs(1:distances_last_index);
+    end
+    if angles_last_index == 0
+        angles = [];
+        angle_inner_concs = [];
+    else
+        angles = angles(1:angles_last_index);
+        angle_inner_concs = angle_inner_concs(1:angles_last_index);
+    end
+    
 
     %% Angles Between Chains Plot
     custom_bins = 0:bin_width:90; % the edges of the custom bins
@@ -110,7 +141,8 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
     ylabel('Number of Chain Pairs');
 
     % Make x axis labels that reflect the actual bin edges
-    x_axis_labels = {};
+    x_axis_labels = cell(1,10);
+    last_index = 0;
 
     % Make labels for the x axis of the format [-45,-40), for example.
     % Matlab puts values on the edge of two bins in the larger bin, so we
@@ -119,8 +151,11 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, max_dis
         % the largest bin gets a closed parenthesis on the right
         this_label = num2str(10 * (i-1));
 
-        x_axis_labels{end+1} = this_label; % add label to list of labels
+        x_axis_labels{last_index + 1} = this_label; % add label to list of labels
+        last_index = last_index + 1;
     end
+    x_axis_labels = x_axis_labels(1:last_index);
+    
     xticks(0:5:45); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels
     

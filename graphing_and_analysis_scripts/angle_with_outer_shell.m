@@ -34,13 +34,20 @@ function [] = angle_with_outer_shell(carboxysome_data, bin_width)
 
     %% calculate real and random angles
     vec_wall = [1 0 0]; % a vector to compare the random vectors with
-    data_angles = []; % the angles made by the real data
-    random_angles = []; % the angles made by the random vectors
-
+    data_angles = zeros(length(concentrations)); % the angles made by the real data
+    random_angles = zeros(length(concentrations)); % the angles made by the random vectors
+    last_index = 0;
     % calculate the angles for the real data and random data
     for i = 1:length(concentrations)
-        data_angles(end+1) = calc_angle(orientations(i,:), ave_normals(i,:)); % real data
-        random_angles(end+1) = calc_angle(random_vecs(i,:), vec_wall); % random angles
+        data_angles(last_index + 1) = calc_angle(orientations(i,:), ave_normals(i,:)); % real data
+        random_angles(last_index + 1) = calc_angle(random_vecs(i,:), vec_wall); % random angles
+    end
+    if last_index == 0
+        data_angles = [];
+        random_angles = [];
+    else
+        data_angles = data_angles(1:last_index);
+        random_angles = random_angles(1:last_index);
     end
 
     %% plot the data
@@ -102,7 +109,7 @@ function [] = angle_with_outer_shell(carboxysome_data, bin_width)
     ylabel('Number of Rubiscos');
 
     % Make x axis labels that reflect the actual bin edges
-    x_axis_labels = {};
+    x_axis_labels = cell(1,length(custom_bins));
 
     % Make labels for the x axis of the format [-45,-40), for example.
     % Matlab puts values on the edge of two bins in the larger bin, so we
@@ -115,7 +122,7 @@ function [] = angle_with_outer_shell(carboxysome_data, bin_width)
             this_label = ['[',num2str(custom_bins(i)),',',num2str(custom_bins(i+1)),')'];
         end
 
-        x_axis_labels{end+1} = this_label; % add label to list of labels
+        x_axis_labels{i} = this_label; % add label to list of labels
     end
     xticks(1:length(custom_bins) - 1); % make enough ticks for each bin
     xticklabels(x_axis_labels); % load the x axis labels

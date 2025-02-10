@@ -43,6 +43,11 @@ function link_arc_analysis(carboxysome_data, label, pointSize, max_angle)
     zData = [];
 
     for carb = carboxysome_data % for each carboxysome
+        xData = [xData, zeros(length(carb.rubisco_pairs))];
+        yData = [yData, zeros(length(carb.rubisco_pairs))];
+        zData = [zData, zeros(length(carb.rubisco_pairs))];
+        last_index = 0;
+
         for link = carb.rubisco_pairs % for each rubisco pair in the carboxysome
             % target's distance along the source's axis
             projection = link.projection;
@@ -53,15 +58,25 @@ function link_arc_analysis(carboxysome_data, label, pointSize, max_angle)
             
             % store data in arrays to be plotted
             if z <= max_angle % filter out data by angle between axes
-                xData(end+1) = d / rubisco_diameter; % convert units to rubisco diameters
+                xData(last_index + 1) = d / rubisco_diameter; % convert units to rubisco diameters
                 if projection < 0
-                    yData(end+1) = -1*projection / rubisco_diameter; % convert units to rubisco diameters
+                    yData(last_index + 1) = -1*projection / rubisco_diameter; % convert units to rubisco diameters
                 else
-                    yData(end+1) = projection / rubisco_diameter; % convert units to rubisco diameters
+                    yData(last_index + 1) = projection / rubisco_diameter; % convert units to rubisco diameters
                 end
-                zData(end+1) = z;
+                zData(last_index + 1) = z;
+                last_index = last_index + 1;
             end
         end
+    end
+    if last_index == 0
+        xData = [];
+        yData = [];
+        zData = [];
+    else
+        xData = xData(1:last_index);
+        yData = yData(1:last_index);
+        zData = zData(1:last_index);
     end
 
     visualize(xData, yData, zData, pointSize, label); % create the figure

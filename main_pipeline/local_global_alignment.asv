@@ -28,7 +28,8 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
     %% Create pairs based on proximity using spatial hashing
     num_carb = length(carboxysomes);
     all_viable_pairs = Rubisco_Pair.empty;
-    
+    all_viable_pairs(num_carb) = Rubisco_Pair();
+    last_viable_index = 0;
     % Anonymous function to convert a numerical array to a string key
     arrayToStringKey = @(array) mat2str(array);
     
@@ -220,6 +221,7 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
         
         carb.rubisco_pairs = rubisco_pairs;
         all_viable_pairs = [all_viable_pairs, rubisco_pairs];
+        
     end
     
     %% find aligned vs. carboxysome data

@@ -24,18 +24,28 @@ function [] = chain_lengths_analysis(carboxysome_data, min_chain_length, min_lin
     % Initialize arrays to hold the data
     chain_lengths = [];
     total_concentrations = [];
-
+    last_index = 0;
     % find the data in the carboxysome objects
     for carb = carboxysome_data % for each caroxysome
+        chain_lengths = [chain_lengths, zeros(length(carb.chains))];
+        total_concentrations = [total_concentrations, zeros(length(carb.chains))];
         for chain = carb.chains % for each chain
             if chain.length >= min_chain_length % filter out short chains
                 %filter out chains not in lattices if user chooses
                 if sum([carb.chain_links.I_index] == chain.index | [carb.chain_links.J_index] == chain.index) >= min_linkages
-                    chain_lengths(end+1) = chain.length; % save the length of the chain
-                    total_concentrations(end+1) = carb.concentration; % save the concentration of its parent carboxysome
+                    chain_lengths(last_index+1) = chain.length; % save the length of the chain
+                    total_concentrations(last_index+1) = carb.concentration; % save the concentration of its parent carboxysome
+                    last_index = last_index + 1;
                 end
             end
         end
+    end
+    if last_index == 0
+        chain_lengths = [];
+        total_concentrations = [];
+    else
+        chain_lengths = chain_lengths(1:last_index);
+        total_concentrations = total_concentrations(1:last_index);
     end
 
     x = min_chain_length:max(chain_lengths); % x is what will be used to make the bar chart x axis

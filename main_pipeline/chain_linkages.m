@@ -52,7 +52,8 @@ function carboxysome_data = chain_linkages(filename, carboxysome_data, min_dista
     for carb = carboxysome_data % for each carboxysome
         chain_count = length(carb.chains);
         lattices = Chain_Pair.empty; % prepare an array of chain pair objects
-    
+        lattices(length(chain_count)*length(chain_count)) = Chain_Pair();
+        last_index = 0;
         % goes through every chain
         for i = 1:chain_count
             iChain = carb.chains(i);
@@ -72,8 +73,9 @@ function carboxysome_data = chain_linkages(filename, carboxysome_data, min_dista
                     % if chains meet distance and angle parameters
                     if distance < max_distance && distance > min_distance && angle < max_angle
                         % make chain pair out of them
-                        lattices(end+1) = Chain_Pair(carb.carb_index, i, j, iChain.tag, jChain.tag, angle, distance, carb.concentration);
+                        lattices(last_index + 1) =  Chain_Pair(carb.carb_index, i, j, iChain.tag, jChain.tag, angle, distance, carb.concentration);
                         c = c+1;
+                        last_index = last_index + 1;
                     end
                 end
             end
@@ -94,6 +96,12 @@ function carboxysome_data = chain_linkages(filename, carboxysome_data, min_dista
                 g(end+1)= 0;
             end
             g(c) = g(c)+1;
+        end
+        if last_index == 0
+            lattices = [];
+        else
+           
+            lattices = lattices(1:last_index);
         end
         carb.chain_links = lattices; % store the chain pairs in the carboxysome object
     end
