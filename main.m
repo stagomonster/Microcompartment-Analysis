@@ -8,17 +8,17 @@ function carboxysome_data = main()
 %
 % main.m © 2025 is licensed under CC BY-NC-SA 4.0
     
-    % Run Dynamo to allow specialized functions
+    %% Run Dynamo to allow specialized functions
     run /apps/dynamo/1.1.532/dynamo_activate.m
 
-    % Add matlab paths to access scripts in this package
+    %% Add matlab paths to access scripts in this package
     addpath('graphing_and_analysis_scripts/')
     addpath('helper_functions/');
     addpath('main_pipeline/');
     addpath('classes/');
     addpath('data/');
 
-    % Obtain and process input data from file
+    %% Obtain and process input data from file
     num_files = input("Is your input in a single file, or is it separated into even and odd files? Enter 1 for a single file or 2 for split files: ");
     if num_files == 1
         filename = input("Enter the name of your data file. Please ensure that your input data is in bin1 or 2: ", "s");
@@ -66,7 +66,7 @@ function carboxysome_data = main()
     end
     
     diameter = input("Enter the diameter, in meters, of your particle. Please use scientific notation again: ");
-    CONSTANTS = constants(pixel_size, diameter);
+    CONSTANTS = constants(pixel_size, diameter); % set the constants for use in the main pipeline functions
 
     % SETUP READY. Begin Pipeline
     %% STEP 1: CONVEX HULL AND VOLUME
@@ -75,82 +75,121 @@ function carboxysome_data = main()
 
     %% STEP 2: LOCAL GLOBAL ALIGNMENT
     fprintf('\nLocal Global Alignment:\n');
+
+    % ask user if they want to use a custom distance filter value or the
+    % default one
     local_max_distance = input('Enter the maximum distance (in pixels) around a particle you want to search for potential oligimerization partners (to use default value of 2 * monomer diameter enter "default"): ', 's');
     
+    % run local_global_alignment with default values or a custom set
+    % according to user answer
     if strcmp(local_max_distance, 'default')
-        carb_local = local_global_alignment(filename, carb_volumes);
+        carb_local = local_global_alignment(filename, carb_volumes); % default run
     else
-        carb_local = local_global_alignment(filename, carb_volumes, str2double(local_max_distance));
+        carb_local = local_global_alignment(filename, carb_volumes, str2double(local_max_distance)); % custom run
     end
 
     %% STEP 3: LINK ANALYSIS
     fprintf('\nLinkage Analysis:\n');
     fprintf('Please use the following plots to help choose parameters for a valid linkage.\n');
-    neighboring_rubisco_alignment_analysis(carb_local, 2*(diameter/pixel_size), 0, 0);
-    link_arc_analysis(carb_local);
-    fprintf('Press any key to continue.\n');
+
+    % run analysis script with distance filter indicated by user in
+    % local_global_alignment
+    if strcmp(local_max_distance, 'default')
+        neighboring_rubisco_alignment_analysis(carb_local, 2*(diameter/pixel_size), 0, 0); % default run
+    else
+        neighboring_rubisco_alignment_analysis(carb_local, str2double(local_max_distance), 0, 0); % custom run
+    end
+
+    link_arc_analysis(carb_local); % produce link arc analysis graph
+    fprintf('Press any key to continue.\n'); % pause to let user inspect graphs
     pause;
 
     %% STEP 4: LINKAGES
     fprintf('\nLinkages:\n');
+
+    % ask user if they want to use a custom parameter set or a default set
     linkages_choice = input('Would you like to use a custom set of parameters or a default set? Enter "custom" or "default": ', 's');
 
+    % run linkages with default values or a custom set according to user
+    % answer
     if strcmp(linkages_choice, 'default')
-        carb_linkages = linkages(filename, carb_local);
+        carb_linkages = linkages(filename, carb_local); % default run
     else
+        % get custom values from user
         min_factor = input('Enter the minimum distance to search along the particle axis in terms of a multiple of the particle diameter: ');
         max_factor = input('Enter the maximum distance to search along the particle axis in terms of a multiple of the particle diameter: ');
         rad_factor = input('Enter the maximum distance to search radially from the particle axis in terms of a multiple of the particle diameter: ');
         max_angle = input('Enter the maximum angle between particle axes to search in (in degrees): ');
         mutual = input("Do you want to require that both particles in a given pair be in each other's search volumes? Enter 1 for yes, 0 for no: ");
-        carb_linkages = linkages(filename, carb_local, min_factor, max_factor, rad_factor, max_angle, mutual);
+        carb_linkages = linkages(filename, carb_local, min_factor, max_factor, rad_factor, max_angle, mutual); % custom run
     end
 
     %% STEP 5: CHAIN MAKER
     fprintf('\nChain Maker:\n');
+
+    % ask user if they want to use a custom minimum chain length value or
+    % the default one
     chain_min_length = input('Enter the minimum length to be considered a chain or "default" to use the default value of 3: ', 's');
 
+    % run chain_maker with default values or a custom set according to user
+    % answer
     if strcmp(chain_min_length, 'default')
-        carb_chains = chain_maker(filename, carb_linkages);
+        carb_chains = chain_maker(filename, carb_linkages); % default run
     else
-        carb_chains = chain_maker(filename, carb_linkages, str2double(chain_min_length));
+        carb_chains = chain_maker(filename, carb_linkages, str2double(chain_min_length)); % custom run
     end
 
-    start_over = input('\nWould you like to terminate the program to use the new table (y/n)? ', 's');
+    % let the user start over with the new file, if one was generated
+    start_over = input('\nWould you like to terminate the program to use the new table?\n If there were no messages about deleting particles, the script can continue (y/n): ', 's');
+
+    % if the user chooses to continue
     if strcmp(start_over, 'n')
         %% STEP 6: CHAIN LINK ANALYSIS
         fprintf('\nChain Link Analysis:\n');
         fprintf('Please use the following plots to help choose parameters for a valid chain link.\n');
 
+        % run analysis script with chain length filter indicated by user in
+        % chain_maker
         if strcmp(chain_min_length, 'default')
-            chain_spacing_analysis(carb_chains, 3, 2);
+            chain_spacing_analysis(carb_chains, 3, 2); % default run
         else
-            chain_spacing_analysis(carb_chains, str2double(chain_min_length), 2);
+            chain_spacing_analysis(carb_chains, str2double(chain_min_length), 2); % custom run
         end
 
         %% STEP 7: CHAIN LINKAGES
         fprintf('\nChain Linkages:\n');
+
+        % ask user if they want to use a custom parameter set or the 
+        % default set
         chain_links_choice = input('Would you like to use a custom set of parameters or the default set? Enter "custom" or "default": ', 's');
         
+        % run chain_linkages with default values or a custom set according to 
+        % user answer
         if strcmp(chain_links_choice, 'default')
-            carb_chain_links = chain_linkages(filename, carb_chains);
+            carb_chain_links = chain_linkages(filename, carb_chains); % default run
         else
+            % get custom values from user
             min_dist = input('Enter the minimum distance to allow between linked chains in nanometers: ');
             max_dist = input('Enter the maximum distance to allow between linked chains in nanometers: ');
             max_angle = input('Enter the maximum angle to allow between linked chains in degrees: ');
-            carb_chain_links = chain_linkages(filename, carb_chains, min_dist, max_dist, max_angle);
+            carb_chain_links = chain_linkages(filename, carb_chains, min_dist, max_dist, max_angle); % custom run
         end    
     
         %% STEP 8: LATTICE GEN
         fprintf('\nLattice Gen:\n');
+
+        % ask user if they want to use a custom lattice size filter value
+        % or the default value
         lattice_threshold = input('Enter the minimum number of linked chains to constitute a lattice or "default" to use the default value of 5: ', 's');
     
+        % run lattice_gen with default values or a custom set according to 
+        % user answer
         if strcmp(lattice_threshold, 'default')
-            carboxysome_data = lattice_gen(filename, carb_chain_links);
+            carboxysome_data = lattice_gen(filename, carb_chain_links); % default run
         else
-            carboxysome_data = lattice_gen(filename, carb_chain_links, str2double(lattice_threshold));
+            carboxysome_data = lattice_gen(filename, carb_chain_links, str2double(lattice_threshold)); % custom run
         end
-    else
-        carboxysome_data = carb_chains;
+    else % if user chooses to terminate after chain_maker
+        carboxysome_data = carb_chains; % return calculated carboxysome data
     end
 end
