@@ -163,7 +163,9 @@ function carboxysome_data = convex_hull_and_volume(filename)
         x = zeros(length(carb.rubisco));
         y = zeros(length(carb.rubisco));
         z = zeros(length(carb.rubisco));
-        ave_normals = [];
+
+        ave_normals = zeros(length(carb.rubisco), 1);
+        ave_normals_last_index = 0; 
         last_index = 0;
         reference = [mean([carb.rubisco.x]), mean([carb.rubisco.y]), mean([carb.rubisco.z])];
 
@@ -177,8 +179,14 @@ function carboxysome_data = convex_hull_and_volume(filename)
                 y(last_index + 1) = new_y;
                 z(last_index + 1) = new_z;
 
-                ave_normals = [ave_normals; rubisco.ave_normal];
+                ave_normals(ave_normals_last_index, 1) = rubisco.ave_normal;
+                ave_normals_last_index = ave_normals_last_index + 1;
             end
+        end
+        if ave_normals_last_index == 0
+            ave_normals = [];
+        else
+            ave_normals = ave_normals(1:ave_normals_last_index, 1);
         end
         if last_index == 0
             x = [];

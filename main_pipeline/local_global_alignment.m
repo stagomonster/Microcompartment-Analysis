@@ -45,7 +45,7 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
         num_rubisco = carb.num_rubisco;
         vectors = zeros(length(carb.rubisco),3);
         rubiscos = carb.rubisco;
-            
+        
         % Spatial Hashing: Loop once here across all rubisco in the carboxysome 
         % (for i = 1:num_rubisco) and find minimum and maximum possible x, y, and z 
         % coordinate of rubisco position.
@@ -111,7 +111,7 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
             rubisco_outer_list = Rubisco.empty;
             rubisco_inner_list = Rubisco.empty;
             % rubisco_inner_list(length(voxels(stringBox{1}))) = Rubisco();
-             
+            
             for index = voxels(stringBox{1})
                 rubisco_inner_list(end+1) = rubiscos(index);
             end
@@ -124,7 +124,7 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
                     end
                 end
             end
-                
+            
             % Create all pairs from within the current voxel (no distance
             % check necessary since voxel size is small enough). All pairs
             % will be 'valid'.
@@ -137,7 +137,7 @@ function carboxysome_data = local_global_alignment(filename, carboxysomes, max_d
             %     /(factorial(2)*factorial(length(rubisco_inner_list)-2))) ...
             %     + length(rubisco_outer_list) * length(rubisco_inner_list)) = Rubisco_Pair();
             
-            %Revised formula - (inner)(inner-1)/2  +  outer * inner
+            % Revised formula - (inner)(inner-1)/2  +  outer * inner
             rubisco_pairs( (length(rubisco_inner_list)*(length(rubisco_inner_list) - 1)/2) ...
                 + length(rubisco_outer_list) * length(rubisco_inner_list)) = Rubisco_Pair();
             last_index = 0;

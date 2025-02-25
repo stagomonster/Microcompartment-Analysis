@@ -28,8 +28,8 @@ function carboxysome_data = lattice_gen(filename, carboxysome_data, threshold)
 
     % used to store data about full-type lattices that will be printed to 
     % the command window
-    g = [];
-    
+    g = zeros(length(carboxysome_data), 3);
+    g_last_index = 0;
     % for each carboxysomes
     for carb = carboxysome_data
         chains = carb.chains; % all the chains in the carboxysome
@@ -48,8 +48,10 @@ function carboxysome_data = lattice_gen(filename, carboxysome_data, threshold)
         
         % initializes arrays to contain lattice information, leaving room 
         % for there to be multiple lattices in each carboxysome
-        largest = []; % number of chains in lattice
-        centers = []; % parent element of lattice
+        largest = zeros(length(carb_set.all)); % number of chains in lattice
+        centers = zeros(length(carb_set.all)); % parent element of lattice
+        largest_centers_last_index = 0; % index for preallocation
+        
         % this is the default threshold that each group of chains must meet
         % to be considered a lattice (user can change this)
         if nargin < 3
@@ -59,13 +61,23 @@ function carboxysome_data = lattice_gen(filename, carboxysome_data, threshold)
         % goes through every chain and sees if it is part of a set that
         % meets the threshold requirements and if so, adds its whole set to
         % a list
+
         for element = carb_set.all % for each chain
             root = carb_set.locate(element); % find its root
             rank = carb_set.rank(root); % find how many chains the are connected by this root
             if rank >= threshold && ~ismember(root, centers) % if this is a new root and has 5+ chains
-                largest(end+1) = rank; % add the number of chains it has to a list
-                centers(end+1) = root; % add it to a list of unique lattices
+                
+                largest(largest_centers_last_index+1) = rank; % add the number of chains it has to a list
+                centers(largest_centers_last_index+1) = root; % add it to a list of unique lattices
             end
+        end
+
+        if largest_centers_last_index == 0
+            largest = []; 
+            centers = []; 
+        else
+            largest = largest(1:largest_centers_last_index);
+            centers = centers(1:largest_centers_last_index);
         end
 
         max = 0; % variable to store the maximum number of linkages a chain in the lattice makes
@@ -120,10 +132,16 @@ function carboxysome_data = lattice_gen(filename, carboxysome_data, threshold)
 
         % displays which carboxysomes have full lattices
         if carb.lattice_type == LatticeType.full
-            g(end+1, 1:3) = [max, carb.carb_index, carb.tomo];
+            g(g_last_index+1, 1:3) = [max, carb.carb_index, carb.tomo];
+            g_last_index = g_last_index + 1;
         end
         carb.lattice = lattice; % stores the list of chains in the lattice in the carboxysome's lattice property
 
+    end
+    if g_last_index == 0
+        g = [];
+    else
+        g = g(1:g_last_index, 1:3);
     end
     % Print information about the full-type lattices
     fprintf('Max Number of Connections in Full-Type Lattices\n');

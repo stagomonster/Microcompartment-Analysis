@@ -220,13 +220,15 @@ end
 function [ordered_tags, ordered_indices] = find_order(carb, chain, point)
 % orders the rubiscos based on how far they are from the furthest
 % rubisco from the centroid, since that should be an end rubisco
-    distances = [];
     rubiscos = carb.rubisco;
+    distances = zeros(length(chain.indices), 3);
+    last_distances_index = 0;
     for rubisco_index = chain.indices
         rubisco = rubiscos(rubisco_index);
         distance = norm([point.x point.y point.z] - [rubisco.x rubisco.y rubisco.z]);
         % stores all the distances of the rubiscos from the end point
-        distances(end+1, :) = [distance, rubisco.tag, rubisco.index];
+        distances(last_distances_index + 1, :) = [distance, rubisco.tag, rubisco.index];
+        last_distances_index = last_distances_index + 1;
     end
     
     % uses bubble sorting to order the rubiscos from least to greatest
@@ -241,13 +243,15 @@ function [ordered_tags, ordered_indices] = find_order(carb, chain, point)
             end
         end
     end
+    
 
-    ordered_tags = [];
-    ordered_indices = [];
+    ordered_tags = zeros(1, size(distances, 1));
+    ordered_indices = zeros(1, size(distances, 1));
 
-    for distance = distances(:, 2:3)'
-        ordered_tags(end+1) = distance(1);
-        ordered_indices(end+1) = distance(2);
+    for i = 1:size(distances, 1)
+        distance = distances(i, 2:3)';
+        ordered_tags(i) = distance(1);
+        ordered_indices(i) = distance(2);
     end
 end
 

@@ -60,18 +60,21 @@ classdef DisjointSet < handle
 
         function children = find_children(set, parent)
         % used to obtain all members of a single set under one root
-            children = [];
+            children = zeros(length(set.all));
+            last_index = 0;
             for element = set.all
                 root = set.locate(element);
                 if parent == root
-                    children(end+1) = element;
+                    children(last_index + 1) = element;
                 end
             end
+            
+            children = children(1:find(children, 1,'last'));
+
         end
 
         function chains = chain_builder(set)
             % builds a rubisco chain for each unique root
-            chains = {};
             chain_map = containers.Map('KeyType', 'int32', 'ValueType', 'any');
     
             % puts the chains in a Map by the root of their set
@@ -96,9 +99,10 @@ classdef DisjointSet < handle
 
             % combine all the chains into a single 2D cell array
             keys_list = keys(chain_map);
+            chains = cell(1, length(keys_list));
             for i = 1:length(keys_list)
                 key = keys_list{i};
-                chains{end+1} = chain_map(key);
+                chains{i} = chain_map(key);
             end
         end
     end
