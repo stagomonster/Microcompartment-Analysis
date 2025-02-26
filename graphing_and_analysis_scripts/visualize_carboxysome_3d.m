@@ -20,14 +20,17 @@ function [] = visualize_carboxysome_3d(filename)
     % set the name of the file to remove the path leading to it and keep 
     % just the name of the file
     k = strfind(filename, '/');
-    filename = filename(max(k)+1:end);
+    if ~isempty(k)
+        filename = filename(max(k)+1:end);
+    end
+
+    path = strcat('Visualize_Carboxysome_3D/files/', filename);
 
     % Write the file to the directory Visualize_Carboxysome_3D/files if it
     % does not already exist there
-    if ~isfile(filename)
-        path = strcat('Visualize_Carboxysome_3D/files/', filename);
+    if ~isfile(path)
         dwrite(file_data, path);
-        fprintf('\nThe file has been copied to %s where the Visualization script can find it.\n\n', path)
+        fprintf('\nThe file has been copied to %s where the Visualization script can find it.\n\n', path);
     end
 
     % Inform the user of how to open the local webpage
