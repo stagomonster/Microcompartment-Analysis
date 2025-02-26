@@ -164,7 +164,7 @@ function [] = chain_spacing_analysis(carboxysome_data, min_chain_length, bin_wid
         end
     end
 
-    % Make some lables for the plot
+    % Make some labels for the plot
     title(['Angles Between Neighboring Chains of length >=', num2str(min_chain_length), '']);
     xlabel('Angle (deg)');
     ylabel('Number of Chain Pairs');
