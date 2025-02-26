@@ -12,7 +12,7 @@ function display_chain_tags(carb_chains, carb_index)
 % display_chain_tags.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Access the specified Carboxysome in the data array
-    carboxysome = carb_chains(carb_index);
+    carboxysome = carb_chains([carb_chains.carb_index] == carb_index);
     
     % Initialize an empty array to store all tags
     all_tags = cell(1, length(carboxysome.chains));

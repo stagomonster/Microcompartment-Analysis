@@ -12,7 +12,7 @@ function display_lattice_tags(carb_chains, carb_index)
 % display_lattice_tags.m © 2025 is licensed under CC BY-NC-SA 4.0
 
     % Access the specified Carboxysome in the data array
-    carboxysome = carb_chains(carb_index);
+    carboxysome = carb_chains([carb_chains.carb_index] == carb_index);
 
     % tell the user what type the lattice is
     disp(carboxysome.lattice_type);
