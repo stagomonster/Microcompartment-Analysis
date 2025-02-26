@@ -7,7 +7,7 @@ function CONSTANTS = constants(pixel_size, diameter)
     
     if isempty(RUBISCO_DIAMETER_M)
         RUBISCO_DIAMETER_M = 9.936e-9; % Rubisco Diameter, in meters. Change this according to particle.
-        PIXEL_SIZE = 2.54e-10; % Pixel Size, in meters (always in bin2). Change this according to data set and particle.
+        PIXEL_SIZE = 2.208e-10; % Pixel Size, in meters (always in bin2). Change this according to data set and particle.
         AVOGADRO_NUMBER = 6.02214076e+23;
     end
 
