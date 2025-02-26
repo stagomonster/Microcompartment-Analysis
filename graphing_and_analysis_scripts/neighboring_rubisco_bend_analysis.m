@@ -8,7 +8,7 @@ function [] = neighboring_rubisco_bend_analysis(carboxysome_data, bin_limit, bin
 % carboxysome_data - an array of carboxysome objects filled with data at
 %                    least through chain_maker.m
 % bin_limit - the rightmost bin edge value, recommended to be the value
-%             used for max_angle in chain_maker (tight - 25, pivot - 50)
+%             used for max_angle in linkages (tight - 25, pivot - 50)
 % bin_width - the width to make bins in the histogram (in degrees)
 % min_chain_length - the minimum length a chain can be and still be
 %                    included in this analysis
