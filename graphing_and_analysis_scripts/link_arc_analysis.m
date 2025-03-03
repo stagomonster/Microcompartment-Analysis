@@ -107,13 +107,13 @@ function visualize_histogram(x_data, filter_data, label)
     if strcmp(label, 'from')
         % filter radial data to exclude points with "along axis" values
         % greater than a user-defined maximum
-        filter = input(['Plotting Deviation from Central Axis:\nEnter the maximum ' ...
-            'deviation along the central axis a data point can have in this plot (use "inf" to include all): ']);
+        filter = input(['Plotting x-axis value histogram:\nEnter the maximum ' ...
+            'y-axis value a data point can have in this plot (use "inf" to include all): ']);
     else
         % filter "along axis" data to exclude points with radial values
         % greater than a user-defined maximum
-        filter = input(['Plotting Deviation along Central Axis:\nEnter the maximum ' ...
-            'deviation from the central axis a data point can have in this plot (use "inf" to include all): ']);
+        filter = input(['Plotting y-axis value histogram:\nEnter the maximum ' ...
+            'x-axis value a data point can have in this plot (use "inf" to include all): ']);
     end
 
     x_data = x_data(filter_data <= filter); % filter the data
