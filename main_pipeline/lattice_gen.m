@@ -127,11 +127,15 @@ function carboxysome_data = lattice_gen(filename, carboxysome_data, threshold)
     end
     % Print information about the full-type lattices
     fprintf('Max Number of Connections in Full-Type Lattices\n');
-    max_connections = g(:, 1);
-    CB = g(:, 2);
-    Tomo = g(:, 3);
-    T = table(max_connections, CB, Tomo);
-    disp(T);
+    if isempty(g)
+        fprintf('Dataset contains no Full-Type Lattices\n');
+    else
+        max_connections = g(:, 1);
+        CB = g(:, 2);
+        Tomo = g(:, 3);
+        T = table(max_connections, CB, Tomo);
+        disp(T);
+    end
 end
 
     %% Helper Functions
