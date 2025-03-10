@@ -9,7 +9,7 @@ function carboxysome_data = main()
 % main.m © 2025 is licensed under CC BY-NC-SA 4.0
     
     % Run Dynamo to allow specialized functions
-    run /apps/dynamo/1.1.532/dynamo_activate.m
+    run dynamo_activate.m
 
     % Add matlab paths to access scripts in this package
     addpath('helper_functions/');
